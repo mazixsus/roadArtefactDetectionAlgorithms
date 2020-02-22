@@ -1,6 +1,6 @@
 import sys
 import pandas
-import z_thresh
+import algorithms
 import helper_scripts.helpers as helpers
 
 
@@ -34,17 +34,20 @@ def main():
                    "./data/2015-03-15 13-38-29(bumps).csv"]
     csv_results = ["./results/2015-03-10 17-35-02_result.csv", "./results/2015-01-24 09-31-21_result.csv",
                    "./results/2015-03-15 13-38-29_result.csv"]
-    print("xxx")
+
     for data_index in range(len(data_paths)):
         data = pandas.read_csv(data_paths[data_index], parse_dates=['Time'])
         bumps = pandas.read_csv(bumps_paths[data_index])
 
-        threshold = 1.2
-        result = z_thresh.z_thresh(data, threshold)
-        check_statistic(result, bumps, threshold)
+        threshold = 3
+        # for z-thresh - 1.2, z-diff - 3
+        result = algorithms.z_diff(data, threshold)
+        grouped_possible_artefacts = helpers.group_duplicates(result, 20)
 
-        result = pandas.DataFrame(result, columns=["Latitude", "Longitude"])
-        result.to_csv(csv_results[data_index], index=False)
+        check_statistic(grouped_possible_artefacts, bumps, threshold)
+
+        grouped_possible_artefacts_df = pandas.DataFrame(grouped_possible_artefacts, columns=["Latitude", "Longitude"])
+        grouped_possible_artefacts_df.to_csv(csv_results[data_index], index=False)
 
 
 if __name__ == '__main__':
