@@ -34,7 +34,7 @@ def main():
                    "./data/2015-03-15 13-38-29(bumps).csv"]
     csv_results = ["./results/2015-03-10 17-35-02_result.csv", "./results/2015-01-24 09-31-21_result.csv",
                    "./results/2015-03-15 13-38-29_result.csv"]
-
+    print("xxx")
     for data_index in range(len(data_paths)):
         data = pandas.read_csv(data_paths[data_index], parse_dates=['Time'])
         bumps = pandas.read_csv(bumps_paths[data_index])
