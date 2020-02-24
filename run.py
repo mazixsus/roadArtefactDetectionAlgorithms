@@ -39,9 +39,14 @@ def main():
         data = pandas.read_csv(data_paths[data_index], parse_dates=['Time'])
         bumps = pandas.read_csv(bumps_paths[data_index])
 
-        threshold = 3
-        # for z-thresh - 1.2, z-diff - 3
-        result = algorithms.z_diff(data, threshold)
+        # threshold for z-thresh: 1.2, z-diff: 3, stdev(Z): 0.25, g-zero: 0.8
+        threshold = 0.8
+        window_size = 5
+        # result = algorithms.z_thresh(data, threshold)
+        # result = algorithms.z_diff(data, threshold)
+        # result = algorithms.stdev_alg(data, threshold, window_size)
+        result = algorithms.g_zero(data, threshold)
+
         grouped_possible_artefacts = helpers.group_duplicates(result, 20)
 
         check_statistic(grouped_possible_artefacts, bumps, threshold)

@@ -51,6 +51,7 @@ def g_zero(data, threshold):
     result = list()
     for index, survey in data.iterrows():
         a = math.sqrt(survey[3] ** 2 + survey[4] ** 2 + survey[5] ** 2)
+        # print(a)
         if a < threshold:
             result.append(survey[6:8])
     # print("{0}".format(result))
