@@ -41,6 +41,7 @@ def stdev_alg(data, threshold, window_size):
     for index, survey in data[window_size:].iterrows():
         zaxis_data_window = list(data.iloc[list(range(index-window_size, index)), 5])
         stdev_val = statistics.stdev(zaxis_data_window)
+        # print(stdev_val)
         if stdev_val > threshold:
             result.append(survey[6:8])
     return result
@@ -49,7 +50,7 @@ def stdev_alg(data, threshold, window_size):
 def g_zero(data, threshold):
     result = list()
     for index, survey in data.iterrows():
-        a = math.sqrt(survey[3] ^ 2 + survey[4] ^ 2 + survey[5] ^ 2)
+        a = math.sqrt(survey[3] ** 2 + survey[4] ** 2 + survey[5] ** 2)
         if a < threshold:
             result.append(survey[6:8])
     # print("{0}".format(result))
