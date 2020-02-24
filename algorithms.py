@@ -1,4 +1,5 @@
 import math
+import statistics
 
 import helper_scripts.helpers as helpers
 
@@ -27,7 +28,7 @@ def z_diff(data, threshold):
             continue
 
         diff = (survey[5]-prev_survey[5])/(survey[8]-prev_survey[8]).total_seconds()
-        print(abs(diff))
+        # print(abs(diff))
         if abs(diff) > threshold:
             result.append(survey[6:8])
     # print("{0}".format(result))
@@ -35,10 +36,22 @@ def z_diff(data, threshold):
     return result
 
 
+def stdev_alg(data, threshold, window_size):
+    result = list()
+    for index, survey in data[window_size:].iterrows():
+        zaxis_data_window = list(data.iloc[list(range(index-window_size, index)), 5])
+        stdev_val = statistics.stdev(zaxis_data_window)
+        # print(stdev_val)
+        if stdev_val > threshold:
+            result.append(survey[6:8])
+    return result
+
+
 def g_zero(data, threshold):
     result = list()
     for index, survey in data.iterrows():
-        a = math.sqrt(survey[3] ^ 2 + survey[4] ^ 2 + survey[5] ^ 2)
+        a = math.sqrt(survey[3] ** 2 + survey[4] ** 2 + survey[5] ** 2)
+        # print(a)
         if a < threshold:
             result.append(survey[6:8])
     # print("{0}".format(result))
