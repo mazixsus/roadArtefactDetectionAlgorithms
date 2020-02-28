@@ -11,7 +11,7 @@ import Container from '@material-ui/core/Container';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
 
-const drawerWidth = 240;
+const drawerWidth = 500;
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -66,10 +66,6 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9),
-        },
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -101,8 +97,6 @@ export default function Dashboard() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
     return (
         <div className={classes.root}>
             <CssBaseline />
