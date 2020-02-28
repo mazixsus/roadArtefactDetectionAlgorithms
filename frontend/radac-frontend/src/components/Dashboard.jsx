@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
+import SurveyList from "./SurveyList";
 
 const drawerWidth = 500;
 
@@ -97,6 +98,9 @@ export default function Dashboard() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const surveyNames = require("../resources/surveys");
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -129,10 +133,12 @@ export default function Dashboard() {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
+                <SurveyList data={surveyNames}/>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
+                    a
                 </Container>
             </main>
         </div>
