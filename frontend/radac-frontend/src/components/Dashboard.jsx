@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
 import SurveyList from "./SurveyList";
+import SurveyInput from "./SurveyInput";
 
 const drawerWidth = 500;
 
@@ -108,7 +109,6 @@ export default function Dashboard() {
                 <Toolbar className={classes.toolbar}>
                     <Button
                         variant="outlined"
-                        edge="start"
                         color="inherit"
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
@@ -134,6 +134,7 @@ export default function Dashboard() {
                     </IconButton>
                 </div>
                 <SurveyList data={surveyNames}/>
+                <SurveyInput/>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
