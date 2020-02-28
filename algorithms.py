@@ -18,6 +18,9 @@ def z_thresh(data, threshold):
 
 
 def z_diff(data, threshold):
+    """
+    Check if (Z2_n - Z_n-1)/(Time_n - Time_n-1) pass threshold and return potential artefacts latitude and longitude
+    """
     result = list()
     prev_survey = None
     if_first = True
@@ -48,6 +51,10 @@ def stdev_alg(data, threshold, window_size):
 
 
 def g_zero(data, threshold):
+    """
+    Check if summary acceleration value sqrt(ax^2 + ay^2 + az^2) pass threshold and return potential artefacts latitude
+    and longitude
+    """
     result = list()
     for index, survey in data.iterrows():
         a = math.sqrt(survey[3] ** 2 + survey[4] ** 2 + survey[5] ** 2)
