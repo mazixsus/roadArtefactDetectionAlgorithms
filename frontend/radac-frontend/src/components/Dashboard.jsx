@@ -69,6 +69,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
+        width: 0
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -77,8 +78,8 @@ const useStyles = makeStyles(theme => ({
         overflow: 'auto',
     },
     contentShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
+        // marginLeft: drawerWidth,
+        // width: `calc(100% - ${drawerWidth}px)`,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
@@ -148,7 +149,7 @@ export default function Dashboard() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+                <Container maxWidth="lg" className={clsx(classes.content, open && classes.contentShift)}>
                     <AlgorithmTabs names={algorithmNames}/>
                 </Container>
             </main>
