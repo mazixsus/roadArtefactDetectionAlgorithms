@@ -14,7 +14,13 @@ export default function AlgorithmTabs({names}) {
     };
 
     return (
-        <Tabs value={value} onChange={handleChange} aria-label="algorithm names">
+        <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="algorithm names"
+        >
             {console.log(names)}
             {algorithmNames}
         </Tabs>
