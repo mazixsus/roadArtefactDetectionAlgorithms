@@ -13,9 +13,9 @@ const useStyles = makeStyles(theme => ({
     })
 );
 
-export default function SurveyList(props) {
+export default function SurveyList({names}) {
     const classes = useStyles();
-    const surveyNames = props.data.map((element) =>
+    const surveyNames = names.map((element) =>
         <ListItem key={element.id} button>
             <Typography component={"h2"} variant={"h6"} noWrap>
                 {element.name}

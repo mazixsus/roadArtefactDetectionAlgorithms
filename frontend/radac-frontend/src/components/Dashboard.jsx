@@ -12,6 +12,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
 import SurveyList from "./SurveyList";
 import SurveyInput from "./SurveyInput";
+import AlgorithmTabs from "./AlgorithmTabs";
 
 const drawerWidth = 500;
 
@@ -75,8 +76,16 @@ const useStyles = makeStyles(theme => ({
         height: '100vh',
         overflow: 'auto',
     },
+    contentShift: {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
     container: {
-        paddingTop: theme.spacing(4),
+        paddingTop: theme.spacing(0),
         paddingBottom: theme.spacing(4),
     },
     paper: {
@@ -101,6 +110,7 @@ export default function Dashboard() {
     };
 
     const surveyNames = require("../resources/surveys");
+    const algorithmNames = require("../resources/algorithms");
 
     return (
         <div className={classes.root}>
@@ -133,13 +143,13 @@ export default function Dashboard() {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <SurveyList data={surveyNames}/>
+                <SurveyList names={surveyNames}/>
                 <SurveyInput/>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container maxWidth="lg" className={classes.container}>
-                    a
+                    <AlgorithmTabs names={algorithmNames}/>
                 </Container>
             </main>
         </div>

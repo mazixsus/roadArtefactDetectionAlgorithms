@@ -9,7 +9,6 @@ const useStyles = makeStyles(theme => ({
 );
 
 export default function SurveyInput() {
-    const classes = useStyles();
     return (
         <Grid
             container
