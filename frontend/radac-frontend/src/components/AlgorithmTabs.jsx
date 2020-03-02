@@ -1,6 +1,7 @@
 import React from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import AlgorithmContent from "./AlgorithmContent";
 
 export default function AlgorithmTabs({names}) {
     const [value, setValue] = React.useState(0);
@@ -13,16 +14,25 @@ export default function AlgorithmTabs({names}) {
         setValue(newValue);
     };
 
+    const getAlgorithmId = () =>{
+        return names[value].id
+    };
+
+    const algorithmStats = require("../resources/statistics");
+
+
     return (
-        <Tabs
-            value={value}
-            onChange={handleChange}
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="algorithm names"
-        >
-            {console.log(names)}
-            {algorithmNames}
-        </Tabs>
+        <div>
+            <Tabs
+                value={value}
+                onChange={handleChange}
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="algorithm names"
+            >
+                {algorithmNames}
+            </Tabs>
+            <AlgorithmContent stats={algorithmStats} algorithmId={getAlgorithmId()} />
+        </div>
     )
 }
