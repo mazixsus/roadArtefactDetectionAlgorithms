@@ -1,7 +1,7 @@
 import React from "react";
 import AlgorithmStats from "./AlgorithmStats";
 
-export default function AlgorithmContent({stats, algorithmId}) {
+export default function AlgorithmTabContent({stats, algorithmId}) {
 
     const algorithmStats = stats.find((element) => element.id === algorithmId).stats;
 

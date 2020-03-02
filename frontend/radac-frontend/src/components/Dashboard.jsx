@@ -10,9 +10,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
-import SurveyList from "./SurveyList";
-import SurveyInput from "./SurveyInput";
-import AlgorithmTabs from "./AlgorithmTabs";
+import SurveyList from "./drawer/SurveyList";
+import SurveyInput from "./drawer/SurveyInput";
+import AlgorithmTabs from "./content/AlgorithmTabs";
 
 const drawerWidth = 500;
 
