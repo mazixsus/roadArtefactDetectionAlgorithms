@@ -80,8 +80,10 @@ def f_thresh(data, window_size, quality_variant, threshold_variant):
     result = list()
     for i in helpers.tumbling_window(data, window_size):
         for j in fthresh.possible(i, quality_variant, threshold_variant):
-            p = i[j:j + 1][['Latitude', 'Longitude']].values[0]
-            result.append((p[0], p[1]))
+            result.append(j)
+            # print(j)
+            # p = i[j:j + 1][['Latitude', 'Longitude']].values[0]
+            # result.append((p[0], p[1]))
     return result
 
 

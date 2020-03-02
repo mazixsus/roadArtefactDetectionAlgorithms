@@ -42,28 +42,28 @@ def main():
         "./results/2015-03-15 13-38-29_result.csv"
     ]
 
-    # data_paths = glob.glob("./data/*.csv")
-    # bumps_paths = glob.glob("./bumps/*.csv")
-    # csv_results = list()
-    # for x in data_paths:
-    #     csv_results.append(x.replace(".csv", "_result.csv").replace("data", "results"))
+    data_paths = glob.glob("./data/*.csv")
+    bumps_paths = glob.glob("./bumps/*.csv")
+    csv_results = list()
+    for x in data_paths:
+        csv_results.append(x.replace(".csv", "_result.csv").replace("data", "results"))
 
     for data_index in range(len(data_paths)):
         data = pandas.read_csv(data_paths[data_index], parse_dates=['Time'])
         bumps = pandas.read_csv(bumps_paths[data_index])
 
-        # threshold for z-thresh: 1.2, z-diff: 3, stdev(Z): 0.25, g-zero: 0.8
+        # threshold for z-thresh: 1.2, z-diff: 3, stdev(Z): 0.25, g-zero: 0.8, mod-z-thresh: 4.3
         threshold = 4.3
-        window_size = 5
+        window_size = 50
 
-        prevtime = time.perf_counter()
+        prev_time = time.perf_counter()
         # result = algorithms.z_thresh(data, threshold)
         # result = algorithms.z_diff(data, threshold)
         # result = algorithms.stdev_alg(data, threshold, window_size)
         # result = algorithms.g_zero(data, threshold)
-        result = algorithms.mod_z_thresh(data, threshold)
-        # result = algorithms.f_thresh(data, 10, 1, 1)
-        print("Alg time: {0}".format(time.perf_counter()-prevtime))
+        # result = algorithms.mod_z_thresh(data, threshold)
+        result = algorithms.f_thresh(data, window_size, 1, 1)
+        print("Alg time: {0}".format(time.perf_counter()-prev_time))
 
         grouped_possible_artefacts = helpers.group_duplicates(result, 20)
         check_statistic(grouped_possible_artefacts, bumps, threshold)

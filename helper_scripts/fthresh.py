@@ -80,19 +80,36 @@ def possible(data, qvariant, tvariant):
     system = ctrl.ControlSystemSimulation(ctrl.ControlSystem(rules))
     system.input['quality'] = rrui_class
 
-    for i in range(len(data) - 1):
+    # for i in range(len(data) - 1):
+    #     # calculate difference between current reading and average in
+    #     # this data window
+    #     difference = abs(data['Z2'][i:i + 1].iloc[0] - avgZ2)
+    #
+    #     # recalculate threshold for current data window and reading
+    #     system.input['reading'] = difference
+    #     system.compute()
+    #
+    #     # print(stdZ2 * system.output['threshold'])
+    #     # print(difference)
+    #
+    #     # check if it is possible problem
+    #     if difference > (stdZ2 * system.output['threshold']):
+    #         result.append(i)
+
+    for index, survey in data.iterrows():
         # calculate difference between current reading and average in
         # this data window
-        difference = abs(data['Z2'][i:i + 1].iloc[0] - avgZ2)
+        difference = abs(survey[5] - avgZ2)
 
         # recalculate threshold for current data window and reading
         system.input['reading'] = difference
-        system.compute()        
+        system.compute()
 
-        # print(system.output['threshold'])
+        # print(stdZ2 * system.output['threshold'])
+        # print(difference)
 
         # check if it is possible problem
         if difference > (stdZ2 * system.output['threshold']):
-            result.append(i)
+            result.append(survey[6:8])
 
     return result
