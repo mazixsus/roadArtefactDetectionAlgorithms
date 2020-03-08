@@ -42,11 +42,11 @@ def main():
         "./results/2015-03-15 13-38-29_result.csv"
     ]
 
-    # data_paths = glob.glob("./data/*.csv")
-    # bumps_paths = glob.glob("./bumps/*.csv")
-    # csv_results = list()
-    # for x in data_paths:
-    #     csv_results.append(x.replace(".csv", "_result.csv").replace("data", "results"))
+    data_paths = glob.glob("./data/*.csv")
+    bumps_paths = glob.glob("./bumps/*.csv")
+    csv_results = list()
+    for x in data_paths:
+        csv_results.append(x.replace(".csv", "_result.csv").replace("data", "results"))
 
     for data_index in range(len(data_paths)):
         data = pandas.read_csv(data_paths[data_index], parse_dates=['Time'])
