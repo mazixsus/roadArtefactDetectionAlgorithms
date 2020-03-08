@@ -42,11 +42,11 @@ def main():
         "./results/2015-03-15 13-38-29_result.csv"
     ]
 
-    data_paths = glob.glob("./data/*.csv")
-    bumps_paths = glob.glob("./bumps/*.csv")
-    csv_results = list()
-    for x in data_paths:
-        csv_results.append(x.replace(".csv", "_result.csv").replace("data", "results"))
+    # data_paths = glob.glob("./data/*.csv")
+    # bumps_paths = glob.glob("./bumps/*.csv")
+    # csv_results = list()
+    # for x in data_paths:
+    #     csv_results.append(x.replace(".csv", "_result.csv").replace("data", "results"))
 
     for data_index in range(len(data_paths)):
         data = pandas.read_csv(data_paths[data_index], parse_dates=['Time'])
@@ -62,7 +62,8 @@ def main():
         # result = algorithms.stdev_alg(data, threshold, window_size)
         # result = algorithms.g_zero(data, threshold)
         # result = algorithms.mod_z_thresh(data, threshold)
-        result = algorithms.f_thresh(data, window_size, 1, 1)
+        result = algorithms.my_alg(data, window_size)
+        # result = algorithms.f_thresh(data, window_size, 1, 1)
         print("Alg time: {0}".format(time.perf_counter()-prev_time))
 
         grouped_possible_artefacts = helpers.group_duplicates(result, 20)
