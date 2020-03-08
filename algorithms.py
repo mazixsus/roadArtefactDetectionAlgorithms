@@ -108,46 +108,36 @@ def my_alg(data, window_size):
     global_avg = 0
     global_diff = 0.12
     for i in helpers.tumbling_window(data, window_size):
-        # print(argrelextrema(i['Z2'], numpy.greater))
         sorted_i = i.sort_values(by=['Z2'])
         # print(sorted_i)
-
         index = 0
         artefact_sector = 0
-        avg = 0
         break_diff = 0
         avg_end = 0
 
         for j in helpers.tumbling_window(sorted_i, 5):
             if index == 0:
                 prev_avg = j.Z2.agg('average')
-                first_avg = prev_avg
+                avg_end = prev_avg
                 # print(prev_avg)
             else:
                 curr_avg = j.Z2.agg('average')
                 diff = abs(prev_avg - curr_avg)
 
-                if (diff > 0.12) and (1 <= index <= 3):
+                if (diff > 0.12) and (1 <= index <= 5):
                     break_diff = diff
                     artefact_sector = 1
-                    avg = 0
                     avg_end = curr_avg
-                elif index < 7:
-                    avg = (avg + prev_avg)/2
-
                 prev_avg = curr_avg
                 # print(diff)
                 # print("--------------------------------")
 
             index += 1
         # avg_end = avg if avg_end == 0 else avg_end
-        avg_end = first_avg if avg_end == 0 else avg_end
 
         global_avg = (global_avg + avg_end)/2 if avg_end != 0 else global_avg
         global_diff = (global_diff + break_diff)/2 if break_diff != 0 else global_diff
         # global_diff = break_diff if break_diff != 0 else global_diff
-
-        # print(artefact_sector)
 
         if artefact_sector == 1:
             for index, survey in i.iterrows():
