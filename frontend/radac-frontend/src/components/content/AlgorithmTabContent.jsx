@@ -4,15 +4,8 @@ import AlgorithmMap from "./tabContent/AlgorithmMap";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
-        root: {
-            height: '100vh'
-        }
-    })
-);
 
 export default function AlgorithmTabContent({stats, algorithmId}) {
-    const classes = useStyles();
     const algorithmStats = stats.find((element) => element.id === algorithmId).stats;
 
     return (
@@ -21,8 +14,7 @@ export default function AlgorithmTabContent({stats, algorithmId}) {
             spacing={3}
             direction="row"
             justify="center"
-            alignItems="center"
-            className={classes.root}
+            alignItems="stretch"
         >
             {console.log(algorithmId)}
             {console.log(algorithmStats)}

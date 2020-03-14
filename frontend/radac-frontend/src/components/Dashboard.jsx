@@ -149,7 +149,7 @@ export default function Dashboard() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={clsx(classes.content, open && classes.contentShift)}>
+                <Container fixed className={open && classes.contentShift}>
                     <AlgorithmTabs names={algorithmNames}/>
                 </Container>
             </main>

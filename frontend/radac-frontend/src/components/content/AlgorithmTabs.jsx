@@ -1,7 +1,7 @@
 import React from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import AlgorithmContent from "./AlgorithmTabContent";
+import AlgorithmTabContent from "./AlgorithmTabContent";
 
 export default function AlgorithmTabs({names}) {
     const [value, setValue] = React.useState(0);
@@ -32,7 +32,7 @@ export default function AlgorithmTabs({names}) {
             >
                 {algorithmNames}
             </Tabs>
-            <AlgorithmContent stats={algorithmStats} algorithmId={getAlgorithmId()} />
+            <AlgorithmTabContent stats={algorithmStats} algorithmId={getAlgorithmId()} />
         </div>
     )
 }

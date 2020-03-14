@@ -1,17 +1,35 @@
 import React from "react";
+import {Map, GoogleApiWrapper, Marker} from 'google-maps-react'
 
-export default function AlgorithmMap({bumps}) {
+const mapStyles = {
+    margin: '2% 5% 4% 0',
+};
 
-    const mapImage = require("../../../resources/map.png");
+const containerStyles = {
+    width: '85%',
+    height: '90%',
+    position: 'fixed'
+};
 
+function AlgorithmMap(props) {
     return (
-        <div>
-            <img
-            style={{
-                maxWidth: '100%',
-                maxHeight: '100%'
-            }}
-                src={mapImage} alt="mapa google" />
-        </div>
+        <Map
+            google={props.google}
+            zoom={15}
+            style={mapStyles}
+            containerStyle={containerStyles}
+            initialCenter={{lat: 51.2728665489703, lng: 22.5443017110229}}
+        >
+            <Marker
+                name={'Your position'}
+                position={{lat: 51.2728665489703, lng: 22.5443017110229}}
+                icon={{
+                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+                }}/>
+        </Map>
     )
 }
+
+export default GoogleApiWrapper({
+    apiKey: process.env.REACT_APP_API_KEY,
+})(AlgorithmMap)
