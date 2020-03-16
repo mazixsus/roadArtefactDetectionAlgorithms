@@ -6,9 +6,10 @@ const mapStyles = {
 };
 
 const containerStyles = {
-    width: '85%',
-    height: '90%',
-    position: 'fixed'
+    width: '70%',
+    height: '80%',
+    // boxSizing:'border-box',
+    // right: '2%'
 };
 
 function AlgorithmMap(props) {
@@ -31,5 +32,5 @@ function AlgorithmMap(props) {
 }
 
 export default GoogleApiWrapper({
-    apiKey: process.env.REACT_APP_API_KEY,
+    // apiKey: process.env.REACT_APP_API_KEY,
 })(AlgorithmMap)

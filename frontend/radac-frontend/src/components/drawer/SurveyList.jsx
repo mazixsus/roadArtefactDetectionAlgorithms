@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
         root: {
             position: 'relative',
             overflow: 'auto',
-            maxHeight: '70vh',
+            maxHeight: '70vh'
         },
     })
 );
@@ -25,7 +25,9 @@ export default function SurveyList({names}) {
 
 
     return (
-        <List className={classes.root}>
+        <List
+            className={classes.root}
+        >
             {surveyNames}
             {surveyNames}
             {surveyNames}
