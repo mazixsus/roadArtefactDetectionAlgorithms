@@ -29,9 +29,9 @@ export default function SurveyList(props) {
 
     const classes = useStyles();
     const surveyNames = props.surveysInfo.map((element) =>
-        <ListItem key={element.id} button>
+        <ListItem key={element.surveyId} button>
             <Typography component={"h2"} variant={"h6"} noWrap>
-                {element.name}
+                {element.filename}
             </Typography>
         </ListItem>
     );
