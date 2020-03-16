@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
-import SurveyList from "./drawer/SurveyList";
+import SurveyList, {SurveyListContainer} from "./drawer/SurveyList";
 import SurveyInput from "./drawer/SurveyInput";
 import AlgorithmTabs from "./content/AlgorithmTabs";
 
@@ -145,7 +145,7 @@ export default function Dashboard() {
                         <ChevronLeftIcon />
                     </IconButton>
                 </div>
-                <SurveyList names={surveyNames}/>
+                <SurveyListContainer names={surveyNames}/>
                 <SurveyInput/>
             </Drawer>
             <main className={classes.content}>
