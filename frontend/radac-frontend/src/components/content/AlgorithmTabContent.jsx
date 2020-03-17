@@ -1,12 +1,16 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import AlgorithmStats from "./tabContent/AlgorithmStats";
 import AlgorithmMap from "./tabContent/AlgorithmMap";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
+import {surveysInfoFetched, surveyStatsFetched} from "../../redux/actions";
+import {connect} from "react-redux";
 
 
 export default function AlgorithmTabContent({stats, algorithmId}) {
     const algorithmStats = stats.find((element) => element.algorithmId === algorithmId).stats;
+
+
 
     return (
         <Grid

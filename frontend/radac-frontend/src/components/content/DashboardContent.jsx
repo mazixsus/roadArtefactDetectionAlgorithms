@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import AlgorithmTabContent from "./AlgorithmTabContent";
-import {algorithmNamesFetched} from "../../redux/actions";
+import AlgorithmTabContent, {AlgorithmTabContentContainer} from "./AlgorithmTabContent";
+import {algorithmNamesFetched, surveyStatsFetched} from "../../redux/actions";
 import {connect} from "react-redux";
 
 export default function DashboardContent(props) {
     const [value, setValue] = useState(0);
     const [isAlgorithmNamesLoaded, setIsAlgorithmNamesLoaded] = useState(false);
+    const [isSurveyStatsLoaded, setIsSurveyStatsLoaded] = useState(false);
+
+    //fetching algorithm names
     useEffect(() => {
             if (!isAlgorithmNamesLoaded) {
                 fetch("/algorithms/names")
@@ -18,6 +21,23 @@ export default function DashboardContent(props) {
                         props.algorithmNamesFetched(json);
                     })
                     .then(() => setIsAlgorithmNamesLoaded(true));
+            }
+
+        }
+    );
+
+    //fetching survey statistics
+    useEffect(() => {
+            if (!isSurveyStatsLoaded) {
+                //TODO change surveyId to not static
+                fetch("/survey/statistics?surveyId="+1)
+                    .then(res =>
+                        res.json()
+                    )
+                    .then(json => {
+                        props.surveyStatsFetched(json);
+                    })
+                    .then(() => setIsSurveyStatsLoaded(true));
             }
 
         }
@@ -47,10 +67,10 @@ export default function DashboardContent(props) {
                 scrollButtons="auto"
                 aria-label="algorithm names"
             >
-                {algorithmNames}
+                {isAlgorithmNamesLoaded && algorithmNames}
             </Tabs>
-            {isAlgorithmNamesLoaded &&
-                <AlgorithmTabContent stats={algorithmStats} algorithmId={getAlgorithmId()}/>
+            {isAlgorithmNamesLoaded && isSurveyStatsLoaded  &&
+                <AlgorithmTabContent stats={props.surveyStats} algorithmId={getAlgorithmId()}/>
             }
         </div>
     )
@@ -58,9 +78,13 @@ export default function DashboardContent(props) {
 
 const mapStateToProps = (state) => {
     return {
-        algorithmNames: state.algorithmNames
+        algorithmNames: state.algorithmNames,
+        surveyStats: state.surveyStats
     }
 };
-const mapDispatchToProps = {algorithmNamesFetched};
+const mapDispatchToProps = {
+    algorithmNamesFetched,
+    surveyStatsFetched
+};
 
 export const DashboardContentContainer = connect(mapStateToProps, mapDispatchToProps)(DashboardContent);
