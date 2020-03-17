@@ -15,10 +15,10 @@ const useStyles = makeStyles(theme => ({
     })
 );
 
-export default function SurveyList(props) {
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
+function SurveyList(props) {
+    const [isSurveysInfoLoaded, setIsSurveysInfoLoaded] = useState(false);
     useEffect(() => {
-            if (!isDataLoaded) {
+            if (!isSurveysInfoLoaded) {
                 fetch("/survey/names")
                     .then(res =>
                         res.json()
@@ -26,7 +26,7 @@ export default function SurveyList(props) {
                     .then(json => {
                         props.surveysInfoFetched(json);
                     })
-                    .then(() => setIsDataLoaded(true));
+                    .then(() => setIsSurveysInfoLoaded(true));
             }
 
         }
@@ -47,7 +47,7 @@ export default function SurveyList(props) {
         <List
             className={classes.root}
         >
-            {isDataLoaded && surveyNames
+            {isSurveysInfoLoaded && surveyNames
             }
         </List>
     );

@@ -6,7 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 
 
 export default function AlgorithmTabContent({stats, algorithmId}) {
-    const algorithmStats = stats.find((element) => element.id === algorithmId).stats;
+    const algorithmStats = stats.find((element) => element.algorithmId === algorithmId).stats;
 
     return (
         <Grid
@@ -16,8 +16,8 @@ export default function AlgorithmTabContent({stats, algorithmId}) {
             justify="center"
             alignItems="stretch"
         >
-            {console.log(algorithmId)}
-            {console.log(algorithmStats)}
+            {/*{console.log(algorithmId)}*/}
+            {/*{console.log(algorithmStats)}*/}
             <Grid item xs={2}>
                 <AlgorithmStats stats={algorithmStats}/>
             </Grid>

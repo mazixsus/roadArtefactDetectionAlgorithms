@@ -7,4 +7,4 @@ export const surveysInfo = (state = [], action) => {
         default:
             return state
     }
-}
+};

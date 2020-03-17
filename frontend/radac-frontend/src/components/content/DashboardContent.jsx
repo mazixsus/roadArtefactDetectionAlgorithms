@@ -1,13 +1,30 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import AlgorithmTabContent from "./AlgorithmTabContent";
+import {algorithmNamesFetched} from "../../redux/actions";
+import {connect} from "react-redux";
 
-export default function DashboardContent({names}) {
-    const [value, setValue] = React.useState(0);
+export default function DashboardContent(props) {
+    const [value, setValue] = useState(0);
+    const [isAlgorithmNamesLoaded, setIsAlgorithmNamesLoaded] = useState(false);
+    useEffect(() => {
+            if (!isAlgorithmNamesLoaded) {
+                fetch("/algorithms/names")
+                    .then(res =>
+                        res.json()
+                    )
+                    .then(json => {
+                        props.algorithmNamesFetched(json);
+                    })
+                    .then(() => setIsAlgorithmNamesLoaded(true));
+            }
 
-    const algorithmNames = names.map((element) =>
-        <Tab key={element.id} label={element.name}/>
+        }
+    );
+
+    const algorithmNames = props.algorithmNames.map((element) =>
+        <Tab key={element.algorithmId} label={element.algorithmName}/>
     );
 
     const handleChange = (event, newValue) => {
@@ -15,7 +32,7 @@ export default function DashboardContent({names}) {
     };
 
     const getAlgorithmId = () =>{
-        return names[value].id
+        return props.algorithmNames[value].algorithmId
     };
 
     const algorithmStats = require("../../resources/statistics");
@@ -32,7 +49,18 @@ export default function DashboardContent({names}) {
             >
                 {algorithmNames}
             </Tabs>
-            <AlgorithmTabContent stats={algorithmStats} algorithmId={getAlgorithmId()} />
+            {isAlgorithmNamesLoaded &&
+                <AlgorithmTabContent stats={algorithmStats} algorithmId={getAlgorithmId()}/>
+            }
         </div>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        algorithmNames: state.algorithmNames
+    }
+};
+const mapDispatchToProps = {algorithmNamesFetched};
+
+export const DashboardContentContainer = connect(mapStateToProps, mapDispatchToProps)(DashboardContent);
