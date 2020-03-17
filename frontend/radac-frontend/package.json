@@ -39,5 +39,5 @@
   "devDependencies": {
     "@material-ui/icons": "^4.9.1"
   },
-  "proxy": "https://cd0ee868-27f4-492a-8c38-9e1f0f095c12.mock.pstmn.io"
+  "proxy": "http://localhost:3001"
 }
