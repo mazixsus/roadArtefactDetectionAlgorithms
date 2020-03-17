@@ -6,13 +6,10 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import Button from "@material-ui/core/Button";
-import SurveyList, {SurveyListContainer} from "./drawer/SurveyList";
-import SurveyInput from "./drawer/SurveyInput";
-import AlgorithmTabs from "./content/AlgorithmTabs";
+import DashboardContent from "./content/DashboardContent";
+import DrawerContent from "./drawer/DrawerContent";
 
 const drawerWidth = 500;
 
@@ -20,16 +17,6 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
 },
-    toolbar: {
-        // paddingRight: 24, // keep right padding when drawer closed
-    },
-    toolbarIcon: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        padding: '0 8px',
-        ...theme.mixins.toolbar,
-    },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
@@ -111,14 +98,13 @@ export default function Dashboard() {
         setOpen(false);
     };
 
-    const surveyNames = require("../resources/surveys");
     const algorithmNames = require("../resources/algorithms");
 
     return (
         <div className={classes.root}>
             <CssBaseline />
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-                <Toolbar className={classes.toolbar}>
+                <Toolbar>
                     <Button
                         variant="outlined"
                         color="inherit"
@@ -140,18 +126,12 @@ export default function Dashboard() {
                 }}
                 open={open}
             >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <SurveyListContainer names={surveyNames}/>
-                <SurveyInput/>
+               <DrawerContent onClick={handleDrawerClose}/>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
                 <Container fixed className={open && classes.contentShift}>
-                    <AlgorithmTabs names={algorithmNames}/>
+                    <DashboardContent names={algorithmNames}/>
                 </Container>
             </main>
         </div>
