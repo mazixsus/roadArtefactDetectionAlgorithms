@@ -12,3 +12,8 @@ export const surveyStatsFetched = (surveyStats) => ({
     type: 'FETCH_SURVEY_STATISTICS_FETCHED',
     surveyStats
 });
+
+export const surveyResultsFetched = (surveyResults) => ({
+    type: 'FETCH_SURVEY_RESULTS_FETCHED',
+    surveyResults
+});

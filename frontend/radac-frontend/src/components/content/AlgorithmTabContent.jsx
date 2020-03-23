@@ -7,10 +7,9 @@ import {surveysInfoFetched, surveyStatsFetched} from "../../redux/actions";
 import {connect} from "react-redux";
 
 
-export default function AlgorithmTabContent({stats, algorithmId}) {
+export default function AlgorithmTabContent({stats, detectedBumps, algorithmId}) {
     const algorithmStats = stats.find((element) => element.algorithmId === algorithmId).stats;
-
-
+    const algorithmDetectedBumps = detectedBumps.find((element) => element.algorithmId === algorithmId)["detectedBumps"];
 
     return (
         <Grid
@@ -21,12 +20,13 @@ export default function AlgorithmTabContent({stats, algorithmId}) {
             alignItems="stretch"
         >
             {/*{console.log(algorithmId)}*/}
-            {/*{console.log(algorithmStats)}*/}
+            {console.log(algorithmStats)}
+            {console.log(algorithmDetectedBumps)}
             <Grid item xs={2}>
                 <AlgorithmStats stats={algorithmStats}/>
             </Grid>
             <Grid item xs={10}>
-                <AlgorithmMap/>
+                <AlgorithmMap bumps={algorithmDetectedBumps}/>
             </Grid>
 
         </Grid>

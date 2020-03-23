@@ -12,21 +12,27 @@ const containerStyles = {
     // right: '2%'
 };
 
-function AlgorithmMap(props) {
+function AlgorithmMap({bumps,google}) {
+
+    const bumpsMarker = bumps.map((element,index) =>
+        <Marker
+            key={index}
+            name={'bump'}
+            position={element}
+            icon={{
+                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            }}/>
+    );
+
     return (
         <Map
-            google={props.google}
+            google={google}
             zoom={15}
             style={mapStyles}
             containerStyle={containerStyles}
-            initialCenter={{lat: 51.2728665489703, lng: 22.5443017110229}}
+            initialCenter={bumps[0]}
         >
-            <Marker
-                name={'Your position'}
-                position={{lat: 51.2728665489703, lng: 22.5443017110229}}
-                icon={{
-                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-                }}/>
+            {bumpsMarker}
         </Map>
     )
 }
