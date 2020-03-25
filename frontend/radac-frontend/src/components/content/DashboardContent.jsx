@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import AlgorithmTabContent, {AlgorithmTabContentContainer} from "./AlgorithmTabContent";
-import {algorithmNamesFetched, surveyResultsFetched, surveyStatsFetched} from "../../redux/actions";
+import {algorithmNamesFetched, surveyBumpsFetched, surveyResultsFetched, surveyStatsFetched} from "../../redux/actions";
 import {connect} from "react-redux";
 
 export default function DashboardContent(props) {
@@ -10,6 +10,8 @@ export default function DashboardContent(props) {
     const [isAlgorithmNamesLoaded, setIsAlgorithmNamesLoaded] = useState(false);
     const [isSurveyStatsLoaded, setIsSurveyStatsLoaded] = useState(false);
     const [isSurveyResultsLoaded, setIsSurveyResultsLoaded] = useState(false);
+    const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
+
 
     //fetching algorithm names
     useEffect(() => {
@@ -23,7 +25,6 @@ export default function DashboardContent(props) {
                     })
                     .then(() => setIsAlgorithmNamesLoaded(true));
             }
-
         }
     );
 
@@ -59,6 +60,21 @@ export default function DashboardContent(props) {
 
     });
 
+    //fetching survey bumps
+    useEffect(() => {
+        if (!isSurveyBumpsLoaded) {
+            //TODO change surveyId to not static
+            fetch("/survey/bumps?surveyId=" + 1)
+                .then(res =>
+                    res.json()
+                )
+                .then(json => {
+                    props.surveyBumpsFetched(json);
+                })
+                .then(() => setIsSurveyBumpsLoaded(true));
+        }
+    });
+
     const algorithmNames = props.algorithmNames.map((element) =>
         <Tab key={element.algorithmId} label={element.algorithmName}/>
     );
@@ -71,6 +87,12 @@ export default function DashboardContent(props) {
         return props.algorithmNames[value].algorithmId
     };
 
+    const isTabContentDataLoaded = () => {
+        return isAlgorithmNamesLoaded &&
+            isSurveyStatsLoaded &&
+            isSurveyResultsLoaded &&
+            isSurveyBumpsLoaded;
+    };
 
     return (
         <div>
@@ -83,12 +105,11 @@ export default function DashboardContent(props) {
             >
                 {isAlgorithmNamesLoaded && algorithmNames}
             </Tabs>
-            {isAlgorithmNamesLoaded &&
-            isSurveyStatsLoaded &&
-            isSurveyResultsLoaded &&
+            {isTabContentDataLoaded() &&
             <AlgorithmTabContent
                 stats={props.surveyStats}
                 detectedBumps={props.surveyResults}
+                bumps={props.surveyBumps}
                 algorithmId={getAlgorithmId()}
             />
             }
@@ -100,13 +121,15 @@ const mapStateToProps = (state) => {
     return {
         algorithmNames: state.algorithmNames,
         surveyStats: state.surveyStats,
-        surveyResults: state.surveyResults
+        surveyResults: state.surveyResults,
+        surveyBumps: state.surveyBumps
     }
 };
 const mapDispatchToProps = {
     algorithmNamesFetched,
     surveyStatsFetched,
-    surveyResultsFetched
+    surveyResultsFetched,
+    surveyBumpsFetched
 };
 
 export const DashboardContentContainer = connect(mapStateToProps, mapDispatchToProps)(DashboardContent);

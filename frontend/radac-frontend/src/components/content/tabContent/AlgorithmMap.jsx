@@ -8,8 +8,6 @@ const mapStyles = {
 const containerStyles = {
     width: '70%',
     height: '80%',
-    // boxSizing:'border-box',
-    // right: '2%'
 };
 
 function AlgorithmMap({bumps,google}) {

@@ -17,3 +17,8 @@ export const surveyResultsFetched = (surveyResults) => ({
     type: 'FETCH_SURVEY_RESULTS_FETCHED',
     surveyResults
 });
+
+export const surveyBumpsFetched = (surveyBumps) => ({
+    type: 'FETCH_SURVEY_BUMPS_FETCHED',
+    surveyBumps
+});
