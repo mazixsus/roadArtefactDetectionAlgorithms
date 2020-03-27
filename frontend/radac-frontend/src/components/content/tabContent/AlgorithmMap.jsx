@@ -10,17 +10,50 @@ const containerStyles = {
     height: '80%',
 };
 
-function AlgorithmMap({tpb,fpb,ndb, google}) {
+function AlgorithmMap({bumps,detectedBumps, google}) {
     const [truePositiveBumps, setTruePositiveBumps] = useState([]);
     const [falsePositiveBumps, setFalsePositiveBumps] = useState([]);
     const [notDetectedBumps, setNotDetectedBumps] = useState([]);
+    const [isBumpSorted, setIsBumpsSorted] = useState(false);
 
+    //detecting tab switching
+    useEffect(() => {
+        setIsBumpsSorted(false)
+    }, [detectedBumps]);
 
-    // const TruePositiveBumps = bumps.filter((element) => {
-    //     element.lat
-    // }, detectedBumps);
-    // const FalsePositiveBumps;
-    // const NotDetectedBumps;
+    useEffect(() => {
+        if (!isBumpSorted) {
+            //searching for true positive bumps
+            setTruePositiveBumps(
+                bumps.filter((bump) => {
+                    return detectedBumps.some((detectedBump) => {
+                        return detectedBump.lat === bump.lat && detectedBump.lng === bump.lng;
+                    })
+                })
+            );
+        }
+    });
+    useEffect(() => {
+        //searching for false positive bumps
+        setFalsePositiveBumps(
+            detectedBumps.filter((detectedBump) => {
+                return truePositiveBumps.every((tpb) => {
+                    return tpb.lat !== detectedBump.lat || tpb.lng !== detectedBump.lng;
+                })
+            })
+        );
+
+        //searching for not detected bumps
+        setNotDetectedBumps(
+            bumps.filter((bump) => {
+                return truePositiveBumps.every((tpb) => {
+                    return tpb.lat !== bump.lat || tpb.lng !== bump.lng;
+                })
+            })
+        );
+
+        setIsBumpsSorted(true);
+    }, [truePositiveBumps]);
 
     const bumpsMarker = (color, data) => data.map((element, index) => {
             return (
@@ -41,11 +74,11 @@ function AlgorithmMap({tpb,fpb,ndb, google}) {
             zoom={15}
             style={mapStyles}
             containerStyle={containerStyles}
-            initialCenter={tpb[0]}
+            initialCenter={bumps[0]}
         >
-            {bumpsMarker("green", tpb)}
-            {bumpsMarker("red", fpb)}
-            {bumpsMarker("blue", ndb)}
+            {bumpsMarker("green", truePositiveBumps)}
+            {bumpsMarker("red", falsePositiveBumps)}
+            {bumpsMarker("blue", notDetectedBumps)}
         </Map>
     )
 }

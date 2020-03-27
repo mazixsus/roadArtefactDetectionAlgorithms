@@ -8,52 +8,13 @@ import {connect} from "react-redux";
 
 
 export default function AlgorithmTabContent({stats, detectedBumps, bumps, algorithmId}) {
-    const algorithmStats = stats.find((element) => element.algorithmId === algorithmId).stats;
-    // const algorithmDetectedBumps = detectedBumps.find((element) => element.algorithmId === algorithmId)["detectedBumps"];
+    const [algorithmStats, setAlgorithmStats] = useState([]);
     const [algorithmDetectedBumps, setAlgorithmDetectedBumps] = useState([]);
-    const [truePositiveBumps, setTruePositiveBumps] = useState([]);
-    const [falsePositiveBumps, setFalsePositiveBumps] = useState([]);
-    const [notDetectedBumps, setNotDetectedBumps] = useState([]);
-    const [isBumpSorted, setIsBumpsSorted] = useState(false);
 
     useEffect(() => {
+        setAlgorithmStats( stats.find((element) => element.algorithmId === algorithmId).stats)
         setAlgorithmDetectedBumps(detectedBumps.find((element) => element.algorithmId === algorithmId)["detectedBumps"])
-        setIsBumpsSorted(false)
     }, [algorithmId]);
-
-    useEffect(() => {
-        if (!isBumpSorted) {
-            //searching for true positive bumps
-            setTruePositiveBumps(
-                bumps.filter((bump) => {
-                    return algorithmDetectedBumps.some((detectedBump) => {
-                        return detectedBump.lat === bump.lat && detectedBump.lng === bump.lng;
-                    })
-                })
-            );
-        }
-    });
-    useEffect(() => {
-        //searching for false positive bumps
-        setFalsePositiveBumps(
-            algorithmDetectedBumps.filter((detectedBump) => {
-                return truePositiveBumps.every((tpb) => {
-                    return tpb.lat !== detectedBump.lat || tpb.lng !== detectedBump.lng;
-                })
-            })
-        );
-
-        //searching for not detected bumps
-        setNotDetectedBumps(
-            bumps.filter((bump) => {
-                return truePositiveBumps.every((tpb) => {
-                    return tpb.lat !== bump.lat || tpb.lng !== bump.lng;
-                })
-            })
-        );
-
-        setIsBumpsSorted(true);
-    }, [truePositiveBumps]);
 
 
     return (
@@ -71,15 +32,10 @@ export default function AlgorithmTabContent({stats, detectedBumps, bumps, algori
                 <AlgorithmStats stats={algorithmStats}/>
             </Grid>
             <Grid item xs={10}>
-                {isBumpSorted &&
                 <AlgorithmMap
                     bumps={bumps}
                     detectedBumps={algorithmDetectedBumps}
-                    tpb={truePositiveBumps}
-                    fpb={falsePositiveBumps}
-                    ndb={notDetectedBumps}
                 />
-                }
             </Grid>
 
         </Grid>
