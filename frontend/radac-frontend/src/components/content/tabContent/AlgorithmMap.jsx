@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Map, GoogleApiWrapper, Marker} from 'google-maps-react'
 
 const mapStyles = {
@@ -10,16 +10,29 @@ const containerStyles = {
     height: '80%',
 };
 
-function AlgorithmMap({bumps,google}) {
+function AlgorithmMap({tpb,fpb,ndb, google}) {
+    const [truePositiveBumps, setTruePositiveBumps] = useState([]);
+    const [falsePositiveBumps, setFalsePositiveBumps] = useState([]);
+    const [notDetectedBumps, setNotDetectedBumps] = useState([]);
 
-    const bumpsMarker = bumps.map((element,index) =>
-        <Marker
-            key={index}
-            name={'bump'}
-            position={element}
-            icon={{
-                url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-            }}/>
+
+    // const TruePositiveBumps = bumps.filter((element) => {
+    //     element.lat
+    // }, detectedBumps);
+    // const FalsePositiveBumps;
+    // const NotDetectedBumps;
+
+    const bumpsMarker = (color, data) => data.map((element, index) => {
+            return (
+                <Marker
+                    key={index}
+                    name={'bump'}
+                    position={element}
+                    icon={{
+                        url: "http://maps.google.com/mapfiles/ms/icons/" + color + "-dot.png",
+                    }}/>
+            )
+        }
     );
 
     return (
@@ -28,9 +41,11 @@ function AlgorithmMap({bumps,google}) {
             zoom={15}
             style={mapStyles}
             containerStyle={containerStyles}
-            initialCenter={bumps[0]}
+            initialCenter={tpb[0]}
         >
-            {bumpsMarker}
+            {bumpsMarker("green", tpb)}
+            {bumpsMarker("red", fpb)}
+            {bumpsMarker("blue", ndb)}
         </Map>
     )
 }
