@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import AlgorithmTabContent, {AlgorithmTabContentContainer} from "./AlgorithmTabContent";
+import AlgorithmTabContent from "./AlgorithmTabContent";
 import {algorithmNamesFetched, surveyBumpsFetched, surveyResultsFetched, surveyStatsFetched} from "../../redux/actions";
 import {connect} from "react-redux";
 

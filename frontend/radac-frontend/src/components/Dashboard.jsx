@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Button from "@material-ui/core/Button";
-import DashboardContent, {DashboardContentContainer} from "./content/DashboardContent";
+import {DashboardContentContainer} from "./content/DashboardContent";
 import DrawerContent from "./drawer/DrawerContent";
 
 const drawerWidth = 500;
