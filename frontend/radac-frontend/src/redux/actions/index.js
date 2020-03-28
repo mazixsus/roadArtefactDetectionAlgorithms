@@ -23,6 +23,7 @@ export const surveyBumpsFetched = (surveyBumps) => ({
     surveyBumps
 });
 
-export const selectSurvey = (selectedSurvey) => ({
-    type: ''
-})
+export const selectSurvey = (selectedSurveyId) => ({
+    type: 'SURVEY_SELECT_SUCCESS',
+    selectedSurveyId
+});
