@@ -9,16 +9,20 @@ export const algorithmNamesFetched = (algorithmNames) => ({
 });
 
 export const surveyStatsFetched = (surveyStats) => ({
-    type: 'FETCH_SURVEY_STATISTICS_FETCHED',
+    type: 'FETCH_SURVEY_STATISTICS_SUCCESS',
     surveyStats
 });
 
 export const surveyResultsFetched = (surveyResults) => ({
-    type: 'FETCH_SURVEY_RESULTS_FETCHED',
+    type: 'FETCH_SURVEY_RESULTS_SUCCESS',
     surveyResults
 });
 
 export const surveyBumpsFetched = (surveyBumps) => ({
-    type: 'FETCH_SURVEY_BUMPS_FETCHED',
+    type: 'FETCH_SURVEY_BUMPS_SUCCESS',
     surveyBumps
 });
+
+export const selectSurvey = (selectedSurvey) => ({
+    type: ''
+})
