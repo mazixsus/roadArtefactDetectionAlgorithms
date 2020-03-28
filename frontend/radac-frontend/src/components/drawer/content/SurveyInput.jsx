@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 
-
+//TODO wysyłanie plików do API
 export default function SurveyInput() {
     return (
         <Grid

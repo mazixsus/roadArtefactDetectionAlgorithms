@@ -65,7 +65,9 @@ function SurveyList(props) {
         <List
             className={classes.root}
         >
-            {isSurveysInfoLoaded && surveyNames
+            {isSurveysInfoLoaded
+                ? surveyNames
+                : <div>Wczytywanie...</div>
             }
         </List>
     );
