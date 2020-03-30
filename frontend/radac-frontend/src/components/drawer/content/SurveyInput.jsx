@@ -1,22 +1,40 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Input from "@material-ui/core/Input";
+import {selectSurvey, surveysInfoFetched} from "../../../redux/actions";
+import {connect} from "react-redux";
 
-//TODO wysyłanie plików do API
-export default function SurveyInput() {
-//     useEffect(() => {
-//         const requestOptions = {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({ title: 'React Hooks POST Request Example' })
-//         };
-//         fetch('https://jsonplaceholder.typicode.com/posts', requestOptions)
-//             .then(response => response.json())
-//             .then(data => setPostId(data.id));
-//
-// // empty dependency array means this effect will only run once (like componentDidMount in classes)
-//     }, []);
+export default function SurveyInput(props) {
+    const [surveyFile, setSurveyFile] = useState();
+    const [bumpsFile, setBumpsFile] = useState();
+
+
+    const addSurveyFile = event => {
+        setSurveyFile(event.target.files[0])
+    };
+    const addBumpsFile = event => {
+        setBumpsFile(event.target.files[0])
+    };
+    const handleButtonClick = () => {
+        const data = new FormData();
+        data.append('surveyFile', surveyFile);
+        data.append('bumpsFile',bumpsFile);
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-type': 'text/csv'},
+            body: data
+        };
+        fetch('/survey/add', requestOptions)
+            .then(res =>
+                res.json()
+            )
+            .then(json => {
+                props.selectSurvey(json.surveyId)
+            })
+
+    };
 
 
     return (
@@ -30,6 +48,7 @@ export default function SurveyInput() {
                 marginTop: '10px'
             }}
         >
+
             <Grid item xs={12}>
                 <TextField
                     label="Plik z pomiarami"
@@ -41,9 +60,10 @@ export default function SurveyInput() {
                         readOnly: true,
                     }}
                     inputProps={{
-                        accept: ".csv"
+                        accept: ".csv",
                     }}
                     type={"file"}
+                    onChange={addSurveyFile}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -60,11 +80,13 @@ export default function SurveyInput() {
                         accept: ".csv"
                     }}
                     type={"file"}
+                    onChange={addBumpsFile}
                 />
             </Grid>
             <Grid item xs={12}>
                 <Button
                     variant="outlined"
+                    onClick={handleButtonClick}
                 >
                     Dodaj
                 </Button>
@@ -72,3 +94,15 @@ export default function SurveyInput() {
         </Grid>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        selectedSurvey: state.selectedSurvey
+    }
+};
+const mapDispatchToProps = {
+    selectSurvey
+};
+
+export const SurveyInputContainer = connect(mapStateToProps, mapDispatchToProps)(SurveyInput);
+

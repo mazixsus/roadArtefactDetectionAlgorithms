@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import {SurveyListContainer} from "./content/SurveyList";
-import SurveyInput from "./content/SurveyInput";
+import {SurveyInputContainer} from "./content/SurveyInput";
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +30,7 @@ export default function DrawerContent(props) {
                 </IconButton>
             </div>
             <SurveyListContainer/>
-            <SurveyInput/>
+            <SurveyInputContainer/>
         </Fragment>
     )
 }
