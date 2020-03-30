@@ -8,11 +8,6 @@ export const algorithmNamesFetched = (algorithmNames) => ({
     algorithmNames
 });
 
-export const surveyStatsFetched = (surveyStats) => ({
-    type: 'FETCH_SURVEY_STATISTICS_SUCCESS',
-    surveyStats
-});
-
 export const surveyResultsFetched = (surveyResults) => ({
     type: 'FETCH_SURVEY_RESULTS_SUCCESS',
     surveyResults

@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 function DashboardContent(props) {
     const [value, setValue] = useState(0);
     const [isAlgorithmNamesLoaded, setIsAlgorithmNamesLoaded] = useState(false);
-    const [isSurveyStatsLoaded, setIsSurveyStatsLoaded] = useState(false);
     const [isSurveyResultsLoaded, setIsSurveyResultsLoaded] = useState(false);
     const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
 
@@ -35,20 +34,6 @@ function DashboardContent(props) {
         }
     );
 
-    //fetching survey statistics
-    useEffect(() => {
-            if (!isSurveyStatsLoaded && props.selectedSurvey !== null) {
-                fetch("/survey/statistics?surveyId=" + props.selectedSurvey)
-                    .then(res =>
-                        res.json()
-                    )
-                    .then(json => {
-                        props.surveyStatsFetched(json);
-                    })
-                    .then(() => setIsSurveyStatsLoaded(true));
-            }
-        }
-    );
 
     //fetching survey results
     useEffect(() => {
@@ -93,7 +78,6 @@ function DashboardContent(props) {
 
     const isTabContentDataLoaded = () => {
         return isAlgorithmNamesLoaded &&
-            isSurveyStatsLoaded &&
             isSurveyResultsLoaded &&
             isSurveyBumpsLoaded;
     };
@@ -118,8 +102,7 @@ function DashboardContent(props) {
                     </Tabs>
                     {isTabContentDataLoaded() &&
                     <AlgorithmTabContent
-                        stats={props.surveyStats}
-                        detectedBumps={props.surveyResults}
+                        results={props.surveyResults}
                         bumps={props.surveyBumps}
                         algorithmId={getAlgorithmId()}
                     />
@@ -133,7 +116,6 @@ function DashboardContent(props) {
 const mapStateToProps = (state) => {
     return {
         algorithmNames: state.algorithmNames,
-        surveyStats: state.surveyStats,
         surveyResults: state.surveyResults,
         surveyBumps: state.surveyBumps,
         selectedSurvey: state.selectedSurvey
@@ -141,7 +123,6 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = {
     algorithmNamesFetched,
-    surveyStatsFetched,
     surveyResultsFetched,
     surveyBumpsFetched,
     selectSurvey

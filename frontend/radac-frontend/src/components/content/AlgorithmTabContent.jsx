@@ -3,13 +3,13 @@ import AlgorithmStats from "./tabContent/AlgorithmStats";
 import AlgorithmMap from "./tabContent/AlgorithmMap";
 import Grid from "@material-ui/core/Grid";
 
-export default function AlgorithmTabContent({stats, detectedBumps, bumps, algorithmId}) {
+export default function AlgorithmTabContent({results, bumps, algorithmId}) {
     const [algorithmStats, setAlgorithmStats] = useState([]);
     const [algorithmDetectedBumps, setAlgorithmDetectedBumps] = useState([]);
 
     useEffect(() => {
-        setAlgorithmStats( stats.find((element) => element.algorithmId === algorithmId).stats);
-        setAlgorithmDetectedBumps(detectedBumps.find((element) => element.algorithmId === algorithmId)["detectedBumps"])
+        setAlgorithmStats( results.find((element) => element.algorithmId === algorithmId).stats);
+        setAlgorithmDetectedBumps(results.find((element) => element.algorithmId === algorithmId).detectedBumps)
     }, [algorithmId]);
 
 
