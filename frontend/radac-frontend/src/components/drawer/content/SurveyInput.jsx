@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import Input from "@material-ui/core/Input";
-import {selectSurvey, surveysInfoFetched} from "../../../redux/actions";
+import {selectSurvey} from "../../../redux/actions";
 import {connect} from "react-redux";
 
-export default function SurveyInput(props) {
+function SurveyInput(props) {
     const [surveyFile, setSurveyFile] = useState();
     const [bumpsFile, setBumpsFile] = useState();
 

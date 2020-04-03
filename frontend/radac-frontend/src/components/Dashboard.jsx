@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,7 +16,7 @@ const drawerWidth = 500;
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-},
+    },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
@@ -102,7 +102,7 @@ export default function Dashboard() {
 
     return (
         <div className={classes.root}>
-            <CssBaseline />
+            <CssBaseline/>
             <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
                 <Toolbar>
                     <Button
@@ -126,11 +126,11 @@ export default function Dashboard() {
                 }}
                 open={open}
             >
-               <DrawerContent onClick={handleDrawerClose}/>
+                <DrawerContent onClick={handleDrawerClose}/>
             </Drawer>
             <main className={classes.content}>
-                <div className={classes.appBarSpacer} />
-                <Container fixed className={open && classes.contentShift}>
+                <div className={classes.appBarSpacer}/>
+                <Container fixed className={clsx(open && classes.contentShift)}>
                     <DashboardContentContainer names={algorithmNames}/>
                 </Container>
             </main>

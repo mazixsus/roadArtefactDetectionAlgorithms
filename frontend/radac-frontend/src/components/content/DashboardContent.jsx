@@ -6,8 +6,7 @@ import {
     algorithmNamesFetched,
     selectSurvey,
     surveyBumpsFetched,
-    surveyResultsFetched,
-    surveyStatsFetched
+    surveyResultsFetched
 } from "../../redux/actions";
 import {connect} from "react-redux";
 import Typography from "@material-ui/core/Typography";

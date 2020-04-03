@@ -32,7 +32,7 @@ function AlgorithmMap({bumps,detectedBumps, google}) {
                 })
             );
         }
-    });
+    },[isBumpSorted,bumps,detectedBumps]);
     useEffect(() => {
         //searching for false positive bumps
         setFalsePositiveBumps(
@@ -53,7 +53,7 @@ function AlgorithmMap({bumps,detectedBumps, google}) {
         );
 
         setIsBumpsSorted(true);
-    }, [truePositiveBumps]);
+    }, [truePositiveBumps,bumps,detectedBumps]);
 
     const bumpsMarker = (color, data) => data.map((element, index) => {
             return (

@@ -10,7 +10,7 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
     useEffect(() => {
         setAlgorithmStats( results.find((element) => element.algorithmId === algorithmId).stats);
         setAlgorithmDetectedBumps(results.find((element) => element.algorithmId === algorithmId).detectedBumps)
-    }, [algorithmId]);
+    }, [algorithmId,results]);
 
 
     return (
