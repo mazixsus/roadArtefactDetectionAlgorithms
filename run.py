@@ -53,7 +53,7 @@ def main():
         bumps = pandas.read_csv(bumps_paths[data_index])
 
         # threshold for z-thresh: 1.2, z-diff: 3, stdev(Z): 0.25, g-zero: 0.8, mod-z-thresh: 4.3
-        threshold = 4.3
+        threshold = 1.2
         window_size = 50
 
         prev_time = time.perf_counter()
@@ -67,11 +67,25 @@ def main():
         print("Alg time: {0}".format(time.perf_counter()-prev_time))
 
         grouped_possible_artefacts = helpers.group_duplicates(result, 20)
+        prepare_results(grouped_possible_artefacts)
+        print(data_paths[data_index])
         check_statistic(grouped_possible_artefacts, bumps, threshold)
         print("---------------------------------------------------------")
 
         grouped_possible_artefacts_df = pandas.DataFrame(grouped_possible_artefacts, columns=["Latitude", "Longitude"])
         grouped_possible_artefacts_df.to_csv(csv_results[data_index], index=False)
+
+
+def prepare_results(grouped_possible_artefacts):
+    surveys = []
+    for artefact in grouped_possible_artefacts:
+        surveys.append(
+            {
+                "lat": artefact[0],
+                "lng": artefact[1]
+            }
+        )
+    print(surveys)
 
 
 if __name__ == '__main__':
