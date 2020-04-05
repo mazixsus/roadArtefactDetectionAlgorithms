@@ -11,10 +11,6 @@ from django.http import HttpResponse
 ALGORITHM_NAMES = ["Z-THRESH", "Z-DIFF", "STDEV", "G-ZERO", "MOD-Z-THRESH", "F-THRESH"]
 
 
-def new_view(request):
-    return HttpResponse("")
-
-
 def prepare_results(artefacts_positions):
     surveys = []
     for artefact in artefacts_positions:
@@ -27,27 +23,36 @@ def prepare_results(artefacts_positions):
     return surveys
 
 
+def count_time(function, *args):
+    prev_time = time.perf_counter()
+    result = function(*args)
+    realize_time = time.perf_counter() - prev_time
+    return result, realize_time
+
+
 def get_alg_result(data):
     return {
-        1: algorithms.z_thresh(data, 1.2),
-        2: algorithms.z_diff(data, 3),
-        3: algorithms.stdev_alg(data, 0.25, 50),
-        4: algorithms.g_zero(data, 0.8),
-        5: algorithms.mod_z_thresh(data, 4.3),
-        6: algorithms.f_thresh(data, 50, 1, 1)
+        0: count_time(algorithms.z_thresh, data, 1.2),
+        1: count_time(algorithms.z_diff, data, 3),
+        2: count_time(algorithms.stdev_alg, data, 0.25, 50),
+        3: count_time(algorithms.g_zero, data, 0.8),
+        4: count_time(algorithms.mod_z_thresh, data, 4.3),
+        5: count_time(algorithms.f_thresh, data, 50, 1, 1)
     }
 
 
 def get_statistic(possible_points_grouped, bumps, realize_time):
-    true_positives = helpers.true_positives(
+    true_positives_points = helpers.true_positives(
         possible_points_grouped, helpers.bumps_to_tuplepoints(bumps), 20)
+
+    true_positives = len(true_positives_points)
 
     accuracy = float(0.0)
     if len(bumps) > 0:
-        accuracy = float(len(true_positives) / len(bumps) * 100)
+        accuracy = float(len(true_positives_points) / len(bumps) * 100)
 
-    false_positives = len(possible_points_grouped) - len(true_positives)
-    false_negatives = len(bumps) - len(true_positives)
+    false_positives = len(possible_points_grouped) - len(true_positives_points)
+    false_negatives = len(bumps) - len(true_positives_points)
     return {
         "acc": accuracy,
         "tp": true_positives,
@@ -57,18 +62,15 @@ def get_statistic(possible_points_grouped, bumps, realize_time):
     }
 
 
-def run_algorithms(filename):
-    data = pandas.read_csv("./roadArtefactDetection/data/"+filename)
-    bumps = pandas.read_csv("./roadArtefactDetection/bumps/"+filename.replace(".csv", "_result.csv"))
-
+def run_algorithms(data, bumps):
     results = []
 
-    for i in range(1, 7):
-        prev_time = time.perf_counter()
+    for i in range(0, 6):
+        # prev_time = time.perf_counter()
         alg_result = get_alg_result(data)[i]
-        realize_time = time.perf_counter() - prev_time
-        grouped_possible_artefacts = helpers.group_duplicates(alg_result, 20)
-        statistic = get_statistic(grouped_possible_artefacts, bumps, realize_time)
+        # realize_time = time.perf_counter() - prev_time
+        grouped_possible_artefacts = helpers.group_duplicates(alg_result[0], 20)
+        statistic = get_statistic(grouped_possible_artefacts, bumps, alg_result[1])
         detected_bumps = prepare_results(grouped_possible_artefacts)
         algorithm_data = {
             "algorithmId": i,
@@ -85,23 +87,27 @@ def add_survey(request):
 
 
 def get_results(request):
-    survey_id = request.GET['surveyID']
+    survey_id = request.GET['surveyId']
     filenames = os.listdir("./roadArtefactDetection/data/")
-    data = run_algorithms(filenames[survey_id])
-    return HttpResponse(data)
+    file_path = "./roadArtefactDetection/data/"+filenames[int(survey_id)]
+    bumps_file_path = "./roadArtefactDetection/bumps/"+filenames[int(survey_id)].replace(".csv", "(bumps).csv")
+    data = pandas.read_csv(file_path, parse_dates=['Time'])
+    bumps = pandas.read_csv(bumps_file_path)
+    result = run_algorithms(data, bumps)
+    return HttpResponse(result)
 
 
 def get_survey_names(request):
     print(os.listdir("./"))
     filenames = os.listdir("./roadArtefactDetection/data/")
 
-    data = []
+    result = []
     for index, filename in enumerate(filenames, start=0):
         file = {"surveyId": index, "fileName": filename}
-        data.append(file)
+        result.append(file)
 
-    print(json.dumps(data))
-    return HttpResponse(json.dumps(data))
+    print(json.dumps(result))
+    return HttpResponse(json.dumps(result))
 
 
 def get_bumps(request):
