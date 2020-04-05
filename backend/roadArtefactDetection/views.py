@@ -3,6 +3,7 @@ import json
 import time
 import roadArtefactDetection.algorithms as algorithms
 import roadArtefactDetection.helper_scripts.helpers as helpers
+from django.views.decorators.csrf import csrf_exempt
 
 import pandas
 from django.shortcuts import render
@@ -66,9 +67,7 @@ def run_algorithms(data, bumps):
     results = []
 
     for i in range(0, 6):
-        # prev_time = time.perf_counter()
         alg_result = get_alg_result(data)[i]
-        # realize_time = time.perf_counter() - prev_time
         grouped_possible_artefacts = helpers.group_duplicates(alg_result[0], 20)
         statistic = get_statistic(grouped_possible_artefacts, bumps, alg_result[1])
         detected_bumps = prepare_results(grouped_possible_artefacts)
@@ -82,8 +81,33 @@ def run_algorithms(data, bumps):
     return results
 
 
+@csrf_exempt
 def add_survey(request):
-    file = request.FILES['survey']
+    data_file = request.FILES['survey']
+    bumps_file = request.FILES['bumps']
+    filenames = os.listdir("./roadArtefactDetection/data/")
+    data_file_name = data_file.name
+    counter = 0
+    while data_file_name in filenames:
+        counter += 1
+        data_file_name = data_file_name.replace(".csv", "(" + str(counter) + ").csv")
+
+    file_path = './roadArtefactDetection/data/' + data_file_name
+    bumps_file_path = './roadArtefactDetection/bumps/' + data_file_name.replace('.csv', '(bumps).csv')
+    handle_uploaded_file(file_path, data_file)
+    handle_uploaded_file(bumps_file_path, bumps_file)
+
+    data = pandas.read_csv(file_path, parse_dates=['Time'])
+    bumps = pandas.read_csv(bumps_file_path)
+    result = run_algorithms(data, bumps)
+
+    return HttpResponse(result)
+
+
+def handle_uploaded_file(path, file):
+    with open(path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
 
 
 def get_results(request):
