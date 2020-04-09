@@ -20,20 +20,19 @@ function DashboardContent(props) {
 
     //TODO ogarnąć wysyłanie błędnych requestów
     //fetching algorithm names
-    useEffect(() => {
-            if (!isAlgorithmNamesLoaded && props.selectedSurvey !== null) {
-                fetch("/algorithms/names")
-                    .then(res =>
-                        res.json()
-                    )
-                    .then(json => {
-                        console.log(json);
-                        props.algorithmNamesFetched(json);
-                    })
-                    .then(() => setIsAlgorithmNamesLoaded(true));
-            }
-        }
-    );
+    // useEffect(() => {
+    //         if (!isAlgorithmNamesLoaded && props.selectedSurvey !== null) {
+    //             fetch("/algorithms/names")
+    //                 .then(res =>
+    //                     res.json()
+    //                 )
+    //                 .then(json => {
+    //                     props.algorithmNamesFetched(json);
+    //                 })
+    //                 .then(() => setIsAlgorithmNamesLoaded(true));
+    //         }
+    //     }
+    // );
 
 
     //fetching survey results
@@ -44,6 +43,7 @@ function DashboardContent(props) {
                     res.json()
                 )
                 .then(json => {
+                    console.log(json);
                     props.surveyResultsFetched(json);
                 })
                 .then(() => setIsSurveyResultsLoaded(true));
@@ -59,13 +59,14 @@ function DashboardContent(props) {
                     res.json()
                 )
                 .then(json => {
+                    console.log(json);
                     props.surveyBumpsFetched(json);
                 })
                 .then(() => setIsSurveyBumpsLoaded(true));
         }
     });
 
-    const algorithmNames = props.algorithmNames.map((element) =>
+    const algorithmNames = props.surveyResults.map((element) =>
         <Tab key={element.algorithmId} label={element.algorithmName}/>
     );
 
@@ -97,7 +98,7 @@ function DashboardContent(props) {
                         scrollButtons="auto"
                         aria-label="algorithm names"
                     >
-                        {isAlgorithmNamesLoaded && algorithmNames}
+                        {isSurveyResultsLoaded && algorithmNames}
                     </Tabs>
                     {!isTabContentDataLoaded()
                         ? <StyledCircularProgress/>
