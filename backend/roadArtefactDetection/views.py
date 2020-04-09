@@ -17,13 +17,14 @@ TIMEOUT = 5
 @csrf_exempt
 def add_survey(request):
 
-    if request.method != 'POST' or 'survey' not in request.POST or 'bumps' not in request.POST:
+    if request.method != 'POST' or 'survey' not in request.FILES or 'bumps' not in request.FILES:
         return HttpResponse(status=400)
 
     data_file = request.FILES['survey']
     bumps_file = request.FILES['bumps']
     data_file_name = data_file.name
 
+    print(data_file_name.endswith('.csv'))
     if not data_file_name.endswith('.csv'):
         return HttpResponse('File is not csv.', status=400)
 
