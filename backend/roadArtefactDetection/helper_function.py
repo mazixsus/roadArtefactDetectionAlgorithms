@@ -70,9 +70,11 @@ def save_files(data_file, bumps_file, data_path, bumps_path):
     filenames = os.listdir(data_path)
     counter = 0
     data_file_name = data_file.name
-    while data_file_name in filenames:
-        counter += 1
+    if data_file_name in filenames:
         data_file_name = data_file_name.replace(".csv", "(" + str(counter) + ").csv")
+        while data_file_name in filenames:
+            counter += 1
+            data_file_name = data_file_name.replace("(" + str(counter - 1) + ").csv", "(" + str(counter) + ").csv")
 
     data_file_path = data_path + data_file_name
     bumps_file_path = bumps_path + data_file_name.replace('.csv', '(bumps).csv')

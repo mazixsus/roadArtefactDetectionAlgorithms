@@ -17,7 +17,7 @@ TIMEOUT = 5
 @csrf_exempt
 def add_survey(request):
 
-    if request.method != 'POST' or 'survey' not in request.POST or 'bumps' not in request.POST:
+    if request.method != 'POST' or 'survey' not in request.FILES or 'bumps' not in request.FILES:
         return HttpResponse(status=400)
 
     data_file = request.FILES['survey']
@@ -42,7 +42,7 @@ def add_survey(request):
     bumps = pandas.read_csv(bumps_file_path)
     result = run_algorithms(data, bumps, TIMEOUT)
 
-    return HttpResponse(result)
+    return HttpResponse(json.dumps(result))
 
 
 def get_results(request):
@@ -63,7 +63,7 @@ def get_results(request):
     data = pandas.read_csv(file_path, parse_dates=['Time'])
     bumps = pandas.read_csv(bumps_file_path)
     result = run_algorithms(data, bumps, TIMEOUT)
-    return HttpResponse(result)
+    return HttpResponse(json.dumps(result))
 
 
 def get_survey_names(request):
@@ -98,4 +98,4 @@ def get_bumps(request):
     filenames = os.listdir(BUMPS_PATH)
     bumps = pandas.read_csv(BUMPS_PATH+filenames[survey_id])
     bumps_tuplepoints = helpers.bumps_to_tuplepoints(bumps)
-    return HttpResponse(prepare_results(bumps_tuplepoints))
+    return HttpResponse(json.dumps(prepare_results(bumps_tuplepoints)))
