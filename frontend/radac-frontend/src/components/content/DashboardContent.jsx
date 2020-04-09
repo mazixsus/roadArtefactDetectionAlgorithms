@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import AlgorithmTabContent from "./AlgorithmTabContent";
@@ -9,7 +9,8 @@ import {
     surveyResultsFetched
 } from "../../redux/actions";
 import {connect} from "react-redux";
-import Typography from "@material-ui/core/Typography";
+import EmptyContent from "./EmptyContent";
+import StyledCircularProgress from "../StyledCircularProgress";
 
 function DashboardContent(props) {
     const [value, setValue] = useState(0);
@@ -67,6 +68,7 @@ function DashboardContent(props) {
         <Tab key={element.algorithmId} label={element.algorithmName}/>
     );
 
+    //tab changing
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -82,14 +84,11 @@ function DashboardContent(props) {
     };
 
     return (
-        <div>
+        <Fragment>
             {!props.selectedSurvey
-                //TODO better looking component
-                ? <Typography component={"h2"} variant={"h6"} noWrap>
-                    Wybierz lub wyślij plik z pomiarami
-                </Typography>
+                ? <EmptyContent/>
                 :
-                <div>
+                <Fragment>
                     <Tabs
                         value={value}
                         onChange={handleChange}
@@ -99,16 +98,18 @@ function DashboardContent(props) {
                     >
                         {isAlgorithmNamesLoaded && algorithmNames}
                     </Tabs>
-                    {isTabContentDataLoaded() &&
+                    {!isTabContentDataLoaded()
+                        ? <StyledCircularProgress/>
+                        :
                     <AlgorithmTabContent
                         results={props.surveyResults}
                         bumps={props.surveyBumps}
                         algorithmId={getAlgorithmId()}
                     />
                     }
-                </div>
+                </Fragment>
             }
-        </div>
+        </Fragment>
     )
 }
 

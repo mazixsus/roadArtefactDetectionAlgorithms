@@ -2,58 +2,60 @@ import React, {useState, useEffect} from "react";
 import {Map, GoogleApiWrapper, Marker} from 'google-maps-react'
 
 const mapStyles = {
-    margin: '2% 5% 4% 0',
+    margin: '1% 0 0 0',
 };
 
 const containerStyles = {
-    width: '70%',
+    width: '80%',
     height: '80%',
 };
 
-function AlgorithmMap({bumps,detectedBumps, google}) {
+function AlgorithmMap({bumps, detectedBumps, google}) {
     const [truePositiveBumps, setTruePositiveBumps] = useState([]);
     const [falsePositiveBumps, setFalsePositiveBumps] = useState([]);
     const [notDetectedBumps, setNotDetectedBumps] = useState([]);
     const [isBumpSorted, setIsBumpsSorted] = useState(false);
 
+
     //detecting tab switching
     useEffect(() => {
-        setIsBumpsSorted(false)
+        setIsBumpsSorted(false);
     }, [detectedBumps]);
 
     useEffect(() => {
         if (!isBumpSorted) {
+
             //searching for true positive bumps
-            setTruePositiveBumps(
-                bumps.filter((bump) => {
-                    return detectedBumps.some((detectedBump) => {
-                        return detectedBump.lat === bump.lat && detectedBump.lng === bump.lng;
+            const tp = bumps.filter((bump) => {
+                return detectedBumps.some((detectedBump) => {
+                    return detectedBump.lat === bump.lat && detectedBump.lng === bump.lng;
+                })
+            });
+
+            setTruePositiveBumps(tp);
+
+            //searching for false positive bumps
+            setFalsePositiveBumps(
+                detectedBumps.filter((detectedBump) => {
+                    return tp.every((tpb) => {
+                        return tpb.lat !== detectedBump.lat || tpb.lng !== detectedBump.lng;
                     })
                 })
             );
+
+            //searching for not detected bumps
+            setNotDetectedBumps(
+                bumps.filter((bump) => {
+                    return tp.every((tpb) => {
+                        return tpb.lat !== bump.lat || tpb.lng !== bump.lng;
+                    })
+                })
+            );
+
+            setIsBumpsSorted(true);
         }
-    },[isBumpSorted,bumps,detectedBumps]);
-    useEffect(() => {
-        //searching for false positive bumps
-        setFalsePositiveBumps(
-            detectedBumps.filter((detectedBump) => {
-                return truePositiveBumps.every((tpb) => {
-                    return tpb.lat !== detectedBump.lat || tpb.lng !== detectedBump.lng;
-                })
-            })
-        );
+    }, [isBumpSorted, bumps, detectedBumps]);
 
-        //searching for not detected bumps
-        setNotDetectedBumps(
-            bumps.filter((bump) => {
-                return truePositiveBumps.every((tpb) => {
-                    return tpb.lat !== bump.lat || tpb.lng !== bump.lng;
-                })
-            })
-        );
-
-        setIsBumpsSorted(true);
-    }, [truePositiveBumps,bumps,detectedBumps]);
 
     const bumpsMarker = (color, data) => data.map((element, index) => {
             return (
@@ -76,9 +78,9 @@ function AlgorithmMap({bumps,detectedBumps, google}) {
             containerStyle={containerStyles}
             initialCenter={bumps[0]}
         >
-            {bumpsMarker("green", truePositiveBumps)}
-            {bumpsMarker("red", falsePositiveBumps)}
-            {bumpsMarker("blue", notDetectedBumps)}
+            {isBumpSorted && bumpsMarker("green", truePositiveBumps)}
+            {isBumpSorted && bumpsMarker("red", falsePositiveBumps) }
+            {isBumpSorted && bumpsMarker("blue", notDetectedBumps)  }
         </Map>
     )
 }

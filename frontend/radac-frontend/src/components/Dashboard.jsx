@@ -1,15 +1,13 @@
 import React from 'react';
-import clsx from 'clsx';
 import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import Button from "@material-ui/core/Button";
 import {DashboardContentContainer} from "./content/DashboardContent";
-import DrawerContent from "./drawer/DrawerContent";
+import {DrawerContentContainer} from "./drawer/DrawerContent";
 
 const drawerWidth = 500;
 
@@ -24,54 +22,27 @@ const useStyles = makeStyles(theme => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
     menuButton: {
         marginRight: 36,
-    },
-    menuButtonHidden: {
-        display: 'none',
     },
     title: {
         flexGrow: 1,
     },
     drawerPaper: {
-        position: 'relative',
-        whiteSpace: 'nowrap',
+        // position: 'relative',
+        // whiteSpace: 'nowrap',
         width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: 0
+        // transition: theme.transitions.create('width', {
+        //     easing: theme.transitions.easing.sharp,
+        //     duration: theme.transitions.duration.enteringScreen,
+        // }),
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
-        justifyContent: 'center',
-        // flexGrow: 1,
+        // justifyContent: 'center',
+        flexGrow: 1,
         height: '97vh',
         // overflow: 'auto',
-    },
-    contentShift: {
-        // marginLeft: drawerWidth,
-        // width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
     },
     container: {
         paddingTop: theme.spacing(0),
@@ -82,10 +53,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         overflow: 'auto',
         flexDirection: 'column',
-    },
-    fixedHeight: {
-        height: 240,
-    },
+    }
 }));
 
 export default function Dashboard() {
@@ -103,14 +71,14 @@ export default function Dashboard() {
     return (
         <div className={classes.root}>
             <CssBaseline/>
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <AppBar position="absolute" className={classes.appBar}>
                 <Toolbar>
                     <Button
                         variant="outlined"
                         color="inherit"
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+                        className={classes.menuButton}
                     >
                         Wybierz pomiar
                     </Button>
@@ -120,19 +88,17 @@ export default function Dashboard() {
                 </Toolbar>
             </AppBar>
             <Drawer
-                variant="persistent"
                 classes={{
-                    paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+                    paper: classes.drawerPaper
                 }}
                 open={open}
+                onClose={handleDrawerClose}
             >
-                <DrawerContent onClick={handleDrawerClose}/>
+                <DrawerContentContainer onClick={handleDrawerClose}/>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                <Container fixed className={clsx(open && classes.contentShift)}>
                     <DashboardContentContainer names={algorithmNames}/>
-                </Container>
             </main>
         </div>
     );

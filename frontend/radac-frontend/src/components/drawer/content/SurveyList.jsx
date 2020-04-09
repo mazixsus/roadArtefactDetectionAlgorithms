@@ -3,15 +3,14 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
-import {selectSurvey, surveysInfoFetched} from "../../../redux/actions";
-import {connect} from "react-redux";
+import StyledCircularProgress from "../../StyledCircularProgress";
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
         root: {
             position: 'relative',
             overflow: 'auto',
-            maxHeight: '70vh',
+            maxHeight: '55vh',
         }
     })
 );
@@ -25,9 +24,18 @@ const StyledListItem = withStyles({
     selected: {}
 })(ListItem);
 
-function SurveyList(props) {
+export default function SurveyList(props) {
     const classes = useStyles();
     const [isSurveysInfoLoaded, setIsSurveysInfoLoaded] = useState(false);
+
+    useEffect(() =>{
+     if(props.surveysInfo.length > 0)
+         setIsSurveysInfoLoaded(true);
+     else
+         setIsSurveysInfoLoaded(false)
+    },[props]);
+
+    //fetching surveys
     useEffect(() => {
             if (!isSurveysInfoLoaded) {
                 fetch("/survey/names")
@@ -40,10 +48,12 @@ function SurveyList(props) {
                     .then(() => setIsSurveysInfoLoaded(true));
             }
 
-        }
+        },[props, isSurveysInfoLoaded]
     );
-    const handleListItemClick = (event, index) => {
-        props.selectSurvey(index);
+
+    const handleListItemClick = (event, item) => {
+        props.selectSurvey(item);
+        props.closeDrawer();
     };
 
     const surveyNames =
@@ -67,22 +77,8 @@ function SurveyList(props) {
         >
             {isSurveysInfoLoaded
                 ? surveyNames
-                : <div>Wczytywanie...</div>
+                : <StyledCircularProgress/>
             }
         </List>
     );
 }
-
-const mapStateToProps = (state) => {
-    return {
-        surveysInfo: state.surveysInfo,
-        selectedSurvey: state.selectedSurvey
-    }
-};
-const mapDispatchToProps = {
-    surveysInfoFetched,
-    selectSurvey
-};
-
-export const SurveyListContainer = connect(mapStateToProps, mapDispatchToProps)(SurveyList);
-

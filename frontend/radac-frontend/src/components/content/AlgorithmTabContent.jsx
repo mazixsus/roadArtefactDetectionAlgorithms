@@ -7,6 +7,7 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
     const [algorithmStats, setAlgorithmStats] = useState([]);
     const [algorithmDetectedBumps, setAlgorithmDetectedBumps] = useState([]);
 
+    //selecting data for current algorithm
     useEffect(() => {
         setAlgorithmStats( results.find((element) => element.algorithmId === algorithmId).stats);
         setAlgorithmDetectedBumps(results.find((element) => element.algorithmId === algorithmId).detectedBumps)
@@ -16,7 +17,6 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
     return (
         <Grid
             container
-            spacing={3}
             direction="row"
             justify="center"
             alignItems="stretch"
