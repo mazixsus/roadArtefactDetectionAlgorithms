@@ -114,7 +114,7 @@ def group_duplicates(tuplepoints, distance):
             #print(ccdfp.haversine_point(tuplepoints[i], result[j]))
             if haversine_point(tuplepoints[i], tuplepoints[j]) < distance:
                 found = True
-        
+
         if not found:
             result.append(tuplepoints[i])
             
