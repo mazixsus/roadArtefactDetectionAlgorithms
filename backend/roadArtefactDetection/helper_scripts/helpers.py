@@ -1,6 +1,7 @@
 """
 CRADIA helper functions
 """
+import time
 from math import radians, cos, sin, asin, sqrt
 from functools import reduce
 import numpy
@@ -102,12 +103,13 @@ def indices_to_tuplepoints(indices, data):
     return points
 
 
-def group_duplicates(tuplepoints, distance):
+def group_duplicates(tuplepoints, distance, timeout):
     """
     Groups duplicates - points which are in the radious of a defined distance
     a grouped into one    
     """
     result = []
+    start_time = time.perf_counter()
 
     for i in range(len(tuplepoints)):
         found = False
@@ -118,6 +120,9 @@ def group_duplicates(tuplepoints, distance):
 
         if not found:
             result.append(tuplepoints[i])
+
+        if time.perf_counter() - start_time > timeout:
+            return None
 
     return result
 
