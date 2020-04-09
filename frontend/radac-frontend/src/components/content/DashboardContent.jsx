@@ -16,7 +16,9 @@ function DashboardContent(props) {
     const [value, setValue] = useState(0);
     const [isAlgorithmNamesLoaded, setIsAlgorithmNamesLoaded] = useState(false);
     const [isSurveyResultsLoaded, setIsSurveyResultsLoaded] = useState(false);
+    const [isSurveyResultsLoading, setIsSurveyResultsLoading] = useState(false);
     const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
+    const [isSurveyBumpsLoading, setIsSurveyBumpsLoading] = useState(false);
 
     //TODO ogarnąć wysyłanie błędnych requestów
     //fetching algorithm names
@@ -37,7 +39,8 @@ function DashboardContent(props) {
 
     //fetching survey results
     useEffect(() => {
-        if (!isSurveyResultsLoaded && props.selectedSurvey !== null) {
+        if (!isSurveyResultsLoaded && !isSurveyResultsLoading && props.selectedSurvey !== null) {
+            setIsSurveyResultsLoading(true);
             fetch("/survey/results?surveyId=" + props.selectedSurvey)
                 .then(res =>
                     res.json()
@@ -53,7 +56,8 @@ function DashboardContent(props) {
 
     //fetching survey bumps
     useEffect(() => {
-        if (!isSurveyBumpsLoaded && props.selectedSurvey !== null) {
+        if (isSurveyResultsLoaded && !isSurveyBumpsLoaded && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
+            setIsSurveyBumpsLoading(true);
             fetch("/survey/bumps?surveyId=" + props.selectedSurvey)
                 .then(res =>
                     res.json()
@@ -76,18 +80,17 @@ function DashboardContent(props) {
     };
 
     const getAlgorithmId = () => {
-        return props.algorithmNames[value].algorithmId
+        return props.surveyResults[value].algorithmId
     };
 
     const isTabContentDataLoaded = () => {
-        return isAlgorithmNamesLoaded &&
-            isSurveyResultsLoaded &&
+        return isSurveyResultsLoaded &&
             isSurveyBumpsLoaded;
     };
 
     return (
         <Fragment>
-            {!props.selectedSurvey
+            {props.selectedSurvey === null
                 ? <EmptyContent/>
                 :
                 <Fragment>
