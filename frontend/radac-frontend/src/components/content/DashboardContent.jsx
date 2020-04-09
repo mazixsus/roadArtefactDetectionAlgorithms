@@ -27,6 +27,7 @@ function DashboardContent(props) {
                         res.json()
                     )
                     .then(json => {
+                        console.log(json);
                         props.algorithmNamesFetched(json);
                     })
                     .then(() => setIsAlgorithmNamesLoaded(true));

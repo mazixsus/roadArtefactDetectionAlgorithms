@@ -66,8 +66,6 @@ export default function Dashboard() {
         setOpen(false);
     };
 
-    const algorithmNames = require("../resources/algorithms");
-
     return (
         <div className={classes.root}>
             <CssBaseline/>
@@ -98,7 +96,7 @@ export default function Dashboard() {
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.appBarSpacer}/>
-                    <DashboardContentContainer names={algorithmNames}/>
+                    <DashboardContentContainer/>
             </main>
         </div>
     );
