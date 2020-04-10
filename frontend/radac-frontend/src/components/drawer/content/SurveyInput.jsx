@@ -62,12 +62,14 @@ export default function SurveyInput(props) {
         if (validation()) {
             const data = new FormData();
 
-            data.append('surveyFile', surveyFile);
-            data.append('bumpsFile', bumpsFile);
+            data.append('survey', surveyFile);
+            data.append('bumps', bumpsFile);
 
             const requestOptions = {
                 method: 'POST',
-                headers: {'Content-type': 'text/csv'},
+                headers: {
+                    'enctype': 'multipart/form-data'
+                },
                 body: data
             };
 

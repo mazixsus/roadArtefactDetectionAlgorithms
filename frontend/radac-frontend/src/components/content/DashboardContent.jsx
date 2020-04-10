@@ -14,27 +14,10 @@ import StyledCircularProgress from "../StyledCircularProgress";
 
 function DashboardContent(props) {
     const [value, setValue] = useState(0);
-    const [isAlgorithmNamesLoaded, setIsAlgorithmNamesLoaded] = useState(false);
     const [isSurveyResultsLoaded, setIsSurveyResultsLoaded] = useState(false);
     const [isSurveyResultsLoading, setIsSurveyResultsLoading] = useState(false);
     const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
     const [isSurveyBumpsLoading, setIsSurveyBumpsLoading] = useState(false);
-
-    //TODO ogarnąć wysyłanie błędnych requestów
-    //fetching algorithm names
-    // useEffect(() => {
-    //         if (!isAlgorithmNamesLoaded && props.selectedSurvey !== null) {
-    //             fetch("/algorithms/names")
-    //                 .then(res =>
-    //                     res.json()
-    //                 )
-    //                 .then(json => {
-    //                     props.algorithmNamesFetched(json);
-    //                 })
-    //                 .then(() => setIsAlgorithmNamesLoaded(true));
-    //         }
-    //     }
-    // );
 
 
     //fetching survey results
@@ -46,7 +29,6 @@ function DashboardContent(props) {
                     res.json()
                 )
                 .then(json => {
-                    console.log(json);
                     props.surveyResultsFetched(json);
                 })
                 .then(() => setIsSurveyResultsLoaded(true));
