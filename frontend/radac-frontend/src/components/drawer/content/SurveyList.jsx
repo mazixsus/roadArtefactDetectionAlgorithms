@@ -27,6 +27,7 @@ const StyledListItem = withStyles({
 export default function SurveyList(props) {
     const classes = useStyles();
     const [isSurveysInfoLoaded, setIsSurveysInfoLoaded] = useState(false);
+    const [isSurveysInfoLoading, setIsSurveysInfoLoading] = useState(false);
 
     useEffect(() =>{
      if(props.surveysInfo.length > 0)
@@ -37,7 +38,8 @@ export default function SurveyList(props) {
 
     //fetching surveys
     useEffect(() => {
-            if (!isSurveysInfoLoaded) {
+            if (!isSurveysInfoLoaded && !isSurveysInfoLoading) {
+                setIsSurveysInfoLoading(true);
                 fetch("/survey/names")
                     .then(res =>
                         res.json()
@@ -45,10 +47,13 @@ export default function SurveyList(props) {
                     .then(json => {
                         props.surveysInfoFetched(json);
                     })
-                    .then(() => setIsSurveysInfoLoaded(true));
+                    .then(() => {
+                        setIsSurveysInfoLoaded(true);
+                        setIsSurveysInfoLoading(false);
+                    });
             }
 
-        },[props, isSurveysInfoLoaded]
+        },[props, isSurveysInfoLoaded, isSurveysInfoLoading]
     );
 
     const handleListItemClick = (event, item) => {

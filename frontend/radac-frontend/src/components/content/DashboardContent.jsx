@@ -14,8 +14,10 @@ import StyledCircularProgress from "../StyledCircularProgress";
 
 function DashboardContent(props) {
     const [value, setValue] = useState(0);
+
     const [isSurveyResultsLoaded, setIsSurveyResultsLoaded] = useState(false);
     const [isSurveyResultsLoading, setIsSurveyResultsLoading] = useState(false);
+
     const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
     const [isSurveyBumpsLoading, setIsSurveyBumpsLoading] = useState(false);
 
@@ -31,7 +33,10 @@ function DashboardContent(props) {
                 .then(json => {
                     props.surveyResultsFetched(json);
                 })
-                .then(() => setIsSurveyResultsLoaded(true));
+                .then(() => {
+                    setIsSurveyResultsLoaded(true);
+                    setIsSurveyResultsLoading(false);
+                });
         }
 
     });
@@ -48,7 +53,10 @@ function DashboardContent(props) {
                     console.log(json);
                     props.surveyBumpsFetched(json);
                 })
-                .then(() => setIsSurveyBumpsLoaded(true));
+                .then(() => {
+                    setIsSurveyBumpsLoaded(true);
+                    setIsSurveyBumpsLoading(false);
+                });
         }
     });
 
