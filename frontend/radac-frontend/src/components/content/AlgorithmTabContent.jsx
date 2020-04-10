@@ -21,10 +21,10 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
             justify="center"
             alignItems="stretch"
         >
-            <Grid item xs={2}>
+            <Grid item xs={3}>
                 <AlgorithmStats stats={algorithmStats}/>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={9}>
                 <AlgorithmMap
                     bumps={bumps}
                     detectedBumps={algorithmDetectedBumps}

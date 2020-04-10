@@ -11,14 +11,16 @@ const useStyles = makeStyles(() => ({
     })
 );
 
+const tableLabels = ['Precyzja', 'TPR', 'FPR','FNR','Czas'];
+
 export default function AlgorithmStats({stats}) {
     const classes = useStyles();
 
     //generating statistics list
-    const algorithmStats = Object.entries(stats).map((element) =>
+    const algorithmStats = Object.entries(stats).map((element,index) =>
         <ListItem key={element[0]}>
             <Typography className={classes.listItem} component={"h2"} variant={"h6"} noWrap>
-                {element[0]}
+                {tableLabels[index]}
             </Typography>
             <Typography className={classes.listItem} component={"h2"} variant={"h6"} noWrap>
                 {element[1]}
