@@ -1,9 +1,10 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, Fragment} from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles, withStyles} from "@material-ui/core/styles";
 import StyledCircularProgress from "../../StyledCircularProgress";
+import Information from "../../content/Information";
 
 
 const useStyles = makeStyles(() => ({
@@ -28,32 +29,44 @@ export default function SurveyList(props) {
     const classes = useStyles();
     const [isSurveysInfoLoaded, setIsSurveysInfoLoaded] = useState(false);
     const [isSurveysInfoLoading, setIsSurveysInfoLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
 
-    useEffect(() =>{
-     if(props.surveysInfo.length > 0)
-         setIsSurveysInfoLoaded(true);
-     else
-         setIsSurveysInfoLoaded(false)
-    },[props]);
+    useEffect(() => {
+        if (props.surveysInfo.length > 0) {
+            setIsSurveysInfoLoaded(true);
+            setIsError(false)
+        } else {
+            setIsSurveysInfoLoaded(false);
+            setIsError(false);
+        }
+    }, [props]);
 
     //fetching surveys
     useEffect(() => {
             if (!isSurveysInfoLoaded && !isSurveysInfoLoading) {
                 setIsSurveysInfoLoading(true);
                 fetch("/survey/names")
-                    .then(res =>
-                        res.json()
+                    .then(res => {
+                            if (!res.ok) {
+                                throw Error(res.statusText)
+                            }
+                            return res.json()
+                        }
                     )
                     .then(json => {
                         props.surveysInfoFetched(json);
                     })
                     .then(() => {
+                        setIsError(false);
                         setIsSurveysInfoLoaded(true);
                         setIsSurveysInfoLoading(false);
+                    })
+                    .catch(() => {
+                        setIsError(true)
                     });
             }
 
-        },[props, isSurveysInfoLoaded, isSurveysInfoLoading]
+        }, [props, isSurveysInfoLoaded, isSurveysInfoLoading, isError]
     );
 
     const handleListItemClick = (event, item) => {
@@ -77,13 +90,18 @@ export default function SurveyList(props) {
 
 
     return (
-        <List
-            className={classes.root}
-        >
-            {isSurveysInfoLoaded
-                ? surveyNames
-                : <StyledCircularProgress/>
+        <Fragment>
+            {isError
+                ? <Information text={'Wystąpił błąd z połączeniem'}/>
+                : <List
+                    className={classes.root}
+                >
+                    {isSurveysInfoLoaded
+                        ? surveyNames
+                        : <StyledCircularProgress/>
+                    }
+                </List>
             }
-        </List>
+        </Fragment>
     );
 }

@@ -9,7 +9,7 @@ import {
     surveyResultsFetched
 } from "../../redux/actions";
 import {connect} from "react-redux";
-import EmptyContent from "./EmptyContent";
+import Information from "./Information";
 import StyledCircularProgress from "../StyledCircularProgress";
 
 function DashboardContent(props) {
@@ -21,49 +21,66 @@ function DashboardContent(props) {
     const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
     const [isSurveyBumpsLoading, setIsSurveyBumpsLoading] = useState(false);
 
+    const [isError, setIsError] = useState(false);
+
     //detecting survey change
-    useEffect( () => {
+    useEffect(() => {
         setIsSurveyResultsLoaded(false);
         setIsSurveyBumpsLoaded(false);
-    },[props.selectedSurvey]);
+    }, [props.selectedSurvey]);
 
     //fetching survey results
     useEffect(() => {
         if (!isSurveyResultsLoaded && !isSurveyResultsLoading && props.selectedSurvey !== null) {
             setIsSurveyResultsLoading(true);
             fetch("/survey/results?surveyId=" + props.selectedSurvey)
-                .then(res =>
-                    res.json()
+                .then(res => {
+                        if (!res.ok) {
+                            throw Error(res.statusText);
+                        }
+                        return res.json()
+                    }
                 )
                 .then(json => {
                     props.surveyResultsFetched(json);
                 })
                 .then(() => {
+                    setIsError(false);
                     setIsSurveyResultsLoaded(true);
                     setIsSurveyResultsLoading(false);
+                })
+                .catch(() => {
+                    setIsError(true)
                 });
         }
 
-    },[props,isSurveyResultsLoaded,isSurveyResultsLoading]);
+    }, [props, isSurveyResultsLoaded, isSurveyResultsLoading]);
 
     //fetching survey bumps
     useEffect(() => {
         if (!isSurveyBumpsLoaded && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
             setIsSurveyBumpsLoading(true);
             fetch("/survey/bumps?surveyId=" + props.selectedSurvey)
-                .then(res =>
-                    res.json()
+                .then(res => {
+                        if (!res.ok) {
+                            throw Error(res.statusText);
+                        }
+                        return res.json()
+                    }
                 )
                 .then(json => {
-                    console.log(json);
                     props.surveyBumpsFetched(json);
                 })
                 .then(() => {
+                    setIsError(false);
                     setIsSurveyBumpsLoaded(true);
                     setIsSurveyBumpsLoading(false);
+                })
+                .catch(() => {
+                    setIsError(true)
                 });
         }
-    },[props,isSurveyBumpsLoaded,isSurveyBumpsLoading]);
+    }, [props, isSurveyBumpsLoaded, isSurveyBumpsLoading]);
 
     const algorithmNames = props.surveyResults.map((element) =>
         <Tab key={element.algorithmId} label={element.algorithmName}/>
@@ -85,8 +102,12 @@ function DashboardContent(props) {
 
     return (
         <Fragment>
-            {props.selectedSurvey === null
-                ? <EmptyContent/>
+            {(props.selectedSurvey === null || isError)
+                ? <Information text={
+                    isError
+                        ? 'Wystąpił problem z połączeniem'
+                        : 'Nie wybrano żadnego pomiaru'
+                }/>
                 :
                 <Fragment>
                     <Tabs
@@ -101,11 +122,11 @@ function DashboardContent(props) {
                     {!isTabContentDataLoaded()
                         ? <StyledCircularProgress/>
                         :
-                    <AlgorithmTabContent
-                        results={props.surveyResults}
-                        bumps={props.surveyBumps}
-                        algorithmId={getAlgorithmId()}
-                    />
+                        <AlgorithmTabContent
+                            results={props.surveyResults}
+                            bumps={props.surveyBumps}
+                            algorithmId={getAlgorithmId()}
+                        />
                     }
                 </Fragment>
             }

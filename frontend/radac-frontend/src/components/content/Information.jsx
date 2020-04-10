@@ -6,16 +6,17 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 const useStyles = makeStyles(() => ({
     root: {
         width: '50%',
-        margin: '25% auto'
+        margin: '25% auto',
+        textAlign: 'center'
     }
 }));
 
-export default function EmptyContent() {
+export default function Information({text}) {
     const  classes = useStyles();
     return (
         <Paper elevation={1} className={classes.root}>
-            <Typography component={"h2"} variant={"h6"} noWrap>
-                Nie wybrano żadnego pomiaru
+            <Typography component={"h2"} variant={"h6"}>
+                {text}
             </Typography>
         </Paper>
     )
