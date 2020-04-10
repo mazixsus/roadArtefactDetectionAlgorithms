@@ -21,6 +21,11 @@ function DashboardContent(props) {
     const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
     const [isSurveyBumpsLoading, setIsSurveyBumpsLoading] = useState(false);
 
+    //detecting survey change
+    useEffect( () => {
+        setIsSurveyResultsLoaded(false);
+        setIsSurveyBumpsLoaded(false);
+    },[props.selectedSurvey]);
 
     //fetching survey results
     useEffect(() => {
@@ -39,11 +44,11 @@ function DashboardContent(props) {
                 });
         }
 
-    });
+    },[props,isSurveyResultsLoaded,isSurveyResultsLoading]);
 
     //fetching survey bumps
     useEffect(() => {
-        if (isSurveyResultsLoaded && !isSurveyBumpsLoaded && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
+        if (!isSurveyBumpsLoaded && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
             setIsSurveyBumpsLoading(true);
             fetch("/survey/bumps?surveyId=" + props.selectedSurvey)
                 .then(res =>
@@ -58,7 +63,7 @@ function DashboardContent(props) {
                     setIsSurveyBumpsLoading(false);
                 });
         }
-    });
+    },[props,isSurveyBumpsLoaded,isSurveyBumpsLoading]);
 
     const algorithmNames = props.surveyResults.map((element) =>
         <Tab key={element.algorithmId} label={element.algorithmName}/>
