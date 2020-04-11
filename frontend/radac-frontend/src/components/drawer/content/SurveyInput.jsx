@@ -145,7 +145,7 @@ export default function SurveyInput(props) {
             </Button>
             <ErrorDialog
                 open={isError}
-                toggle={setIsError}
+                close={setIsError}
                 msg={errorMessage}
             />
         </div>

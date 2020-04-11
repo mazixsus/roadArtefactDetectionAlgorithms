@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -8,6 +8,9 @@ import Typography from '@material-ui/core/Typography';
 import Button from "@material-ui/core/Button";
 import {DashboardContentContainer} from "./content/DashboardContent";
 import {DrawerContentContainer} from "./drawer/DrawerContent";
+import IconButton from "@material-ui/core/IconButton";
+import InfoIcon from '@material-ui/icons/Info';
+import Legend from "./Legend";
 
 const drawerWidth = 500;
 
@@ -58,12 +61,18 @@ const useStyles = makeStyles(theme => ({
 
 export default function Dashboard() {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [showLegend, setShowLegend] = useState(false);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
     const handleDrawerClose = () => {
         setOpen(false);
+    };
+
+    const handleLegendOpen = () => {
+        setShowLegend(true);
     };
 
     return (
@@ -83,6 +92,9 @@ export default function Dashboard() {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         RADAC
                     </Typography>
+                    <IconButton onClick={handleLegendOpen}>
+                        <InfoIcon/>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -98,6 +110,10 @@ export default function Dashboard() {
                 <div className={classes.appBarSpacer}/>
                     <DashboardContentContainer/>
             </main>
+            <Legend
+                open={showLegend}
+                close={setShowLegend}
+            />
         </div>
     );
 }

@@ -6,10 +6,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
 
-export default function ErrorDialog({open,toggle,msg}) {
+export default function ErrorDialog({open,close,msg}) {
 
     const handleClose =() =>{
-     toggle(false);
+     close(false);
     };
 
     return (
