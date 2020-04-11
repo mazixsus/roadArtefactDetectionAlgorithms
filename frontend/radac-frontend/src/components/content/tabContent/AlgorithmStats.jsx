@@ -24,6 +24,8 @@ export default function AlgorithmStats({stats}) {
             </Typography>
             <Typography className={classes.listItem} component={"h2"} variant={"h6"} noWrap>
                 {element[1]}
+                {index === 0 && '%'}
+                {index === 4 && ' ms'}
             </Typography>
         </ListItem>
     );
