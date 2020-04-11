@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
+import ErrorDialog from "./ErrorDialog";
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -26,6 +27,8 @@ export default function SurveyInput(props) {
     const [bumpsFile, setBumpsFile] = useState(null);
     const [bumpsFileError, setBumpsFileError] = useState(false);
 
+    const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const addSurveyFile = event => {
         setSurveyFile(event.target.files[0])
@@ -74,13 +77,23 @@ export default function SurveyInput(props) {
             };
 
             fetch('/survey/add', requestOptions)
-                .then(res =>
-                    res.json()
+                .then(res => {
+                        if (!res.ok) {
+                            throw res;
+                        }
+                        return res.json()
+                    }
                 )
                 .then(json => {
                     props.selectSurvey(json.surveyId);
                     props.closeDrawer()
                 })
+                .catch(error => {
+                    error.text().then(message =>
+                        setErrorMessage(message)
+                    );
+                    setIsError(true)
+                });
         }
     };
 
@@ -130,6 +143,11 @@ export default function SurveyInput(props) {
             >
                 Dodaj
             </Button>
+            <ErrorDialog
+                open={isError}
+                toggle={setIsError}
+                msg={errorMessage}
+            />
         </div>
     )
 }
