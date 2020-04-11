@@ -79,6 +79,7 @@ def get_survey_names(request):
         result.append(file)
 
     return HttpResponse(json.dumps(result))
+    # return HttpResponse(status=400)
 
 
 def get_bumps(request):

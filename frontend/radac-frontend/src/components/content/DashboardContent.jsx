@@ -31,7 +31,7 @@ function DashboardContent(props) {
 
     //fetching survey results
     useEffect(() => {
-        if (!isSurveyResultsLoaded && !isSurveyResultsLoading && props.selectedSurvey !== null) {
+        if (!isSurveyResultsLoaded && !isError && !isSurveyResultsLoading && props.selectedSurvey !== null) {
             setIsSurveyResultsLoading(true);
             fetch("/survey/results?surveyId=" + props.selectedSurvey)
                 .then(res => {
@@ -50,15 +50,16 @@ function DashboardContent(props) {
                     setIsSurveyResultsLoading(false);
                 })
                 .catch(() => {
+                    setIsSurveyResultsLoading(false);
                     setIsError(true)
                 });
         }
 
-    }, [props, isSurveyResultsLoaded, isSurveyResultsLoading]);
+    }, [props, isSurveyResultsLoaded, isSurveyResultsLoading, isError]);
 
     //fetching survey bumps
     useEffect(() => {
-        if (!isSurveyBumpsLoaded && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
+        if (!isSurveyBumpsLoaded && !isError && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
             setIsSurveyBumpsLoading(true);
             fetch("/survey/bumps?surveyId=" + props.selectedSurvey)
                 .then(res => {
@@ -77,10 +78,11 @@ function DashboardContent(props) {
                     setIsSurveyBumpsLoading(false);
                 })
                 .catch(() => {
+                    setIsSurveyBumpsLoading(false);
                     setIsError(true)
                 });
         }
-    }, [props, isSurveyBumpsLoaded, isSurveyBumpsLoading]);
+    }, [props, isSurveyBumpsLoaded, isSurveyBumpsLoading, isError]);
 
     const algorithmNames = props.surveyResults.map((element) =>
         <Tab key={element.algorithmId} label={element.algorithmName}/>

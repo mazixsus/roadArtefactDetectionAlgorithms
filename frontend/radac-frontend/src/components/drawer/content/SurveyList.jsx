@@ -43,7 +43,7 @@ export default function SurveyList(props) {
 
     //fetching surveys
     useEffect(() => {
-            if (!isSurveysInfoLoaded && !isSurveysInfoLoading) {
+            if (!isSurveysInfoLoaded && !isSurveysInfoLoading && !isError) {
                 setIsSurveysInfoLoading(true);
                 fetch("/survey/names")
                     .then(res => {
@@ -62,6 +62,7 @@ export default function SurveyList(props) {
                         setIsSurveysInfoLoading(false);
                     })
                     .catch(() => {
+                        setIsSurveysInfoLoading(false);
                         setIsError(true)
                     });
             }
