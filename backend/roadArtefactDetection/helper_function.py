@@ -52,11 +52,11 @@ def get_statistic(possible_points_grouped, bumps, realize_time):
     false_positives = len(possible_points_grouped) - len(true_positives_points)
     false_negatives = len(bumps) - len(true_positives_points)
     return {
-        "acc": accuracy,
+        "acc": round(accuracy, 2),
         "tp": true_positives,
         "fp": false_positives,
         "fn": false_negatives,
-        "time": realize_time
+        "time": round(realize_time*1000, 0)
     }
 
 
@@ -81,7 +81,10 @@ def save_files(data_file, bumps_file, data_path, bumps_path):
     handle_uploaded_file(data_file_path, data_file)
     handle_uploaded_file(bumps_file_path, bumps_file)
 
-    return data_file_path, bumps_file_path
+    filenames = os.listdir(data_path)
+    print(filenames.index(data_file_name))
+
+    return filenames.index(data_file_name)
 
 
 def run_algorithms(data, bumps, timeout):

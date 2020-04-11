@@ -36,11 +36,11 @@ def add_survey(request):
     if not (csv_data_file.columns == DATA_COL_LABEL).all():
         return HttpResponse('Data file not valid.')
 
-    file_path, bumps_file_path = save_files(data_file, bumps_file, DATA_PATH, BUMPS_PATH)
+    survey_id = save_files(data_file, bumps_file, DATA_PATH, BUMPS_PATH)
 
-    data = pandas.read_csv(file_path, parse_dates=['Time'])
-    bumps = pandas.read_csv(bumps_file_path)
-    result = run_algorithms(data, bumps, TIMEOUT)
+    result = {
+        "surveyId": survey_id,
+    }
 
     return HttpResponse(json.dumps(result))
 
@@ -71,7 +71,6 @@ def get_survey_names(request):
     if request.method != 'GET':
         return HttpResponse(status=400)
 
-    print(os.listdir("./"))
     filenames = os.listdir(DATA_PATH)
 
     result = []
@@ -79,7 +78,6 @@ def get_survey_names(request):
         file = {"surveyId": index, "fileName": filename}
         result.append(file)
 
-    print(json.dumps(result))
     return HttpResponse(json.dumps(result))
 
 
