@@ -41,7 +41,6 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
                             detectedBumps={algorithmDetectedBumps}
                         />
                     </Grid>
-
                 </Grid>
             }
         </Fragment>
