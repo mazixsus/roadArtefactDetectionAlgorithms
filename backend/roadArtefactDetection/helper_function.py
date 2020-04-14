@@ -39,25 +39,25 @@ def get_alg_result(data):
     }
 
 
-def get_statistic(possible_points_grouped, bumps, realize_time):
-    true_positives_points = helpers.true_positives(
+def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
+    true_positives, false_positives, false_negatives = helpers.true_positives(
         possible_points_grouped, helpers.bumps_to_tuplepoints(bumps), 20)
 
-    true_positives = len(true_positives_points)
+    true_positives_count = len(true_positives)
 
     accuracy = float(0.0)
     if len(bumps) > 0:
-        accuracy = float(len(true_positives_points) / len(bumps) * 100)
+        accuracy = float(true_positives_count / len(bumps) * 100)
 
-    false_positives = len(possible_points_grouped) - len(true_positives_points)
-    false_negatives = len(bumps) - len(true_positives_points)
+    false_positives_count = len(possible_points_grouped) - true_positives_count
+    false_negatives_count = len(bumps) - true_positives_count
     return {
         "acc": round(accuracy, 2),
-        "tp": true_positives,
-        "fp": false_positives,
-        "fn": false_negatives,
+        "tp": true_positives_count,
+        "fp": false_positives_count,
+        "fn": false_negatives_count,
         "time": round(realize_time*1000, 0)
-    }
+    }, true_positives, false_positives, false_negatives
 
 
 def handle_uploaded_file(path, file):
@@ -95,18 +95,24 @@ def run_algorithms(data, bumps, timeout):
         grouped_possible_artefacts = helpers.group_duplicates(alg_result[0], 20, timeout)
         if grouped_possible_artefacts is not None:
             error = False
-            statistic = get_statistic(grouped_possible_artefacts, bumps, alg_result[1])
-            detected_bumps = prepare_results(grouped_possible_artefacts)
+            statistic, tp, fp, fn = get_statistic_and_points(grouped_possible_artefacts, bumps, alg_result[1])
+            prepared_tp = prepare_results(tp)
+            prepared_fp = prepare_results(fp)
+            prepared_fn = prepare_results(fn)
         else:
             error = True
             statistic = None
-            detected_bumps = None
+            prepared_tp = None
+            prepared_fp = None
+            prepared_fn = None
 
         algorithm_data = {
             "algorithmId": i,
             "algorithmName": ALGORITHM_NAMES[i],
             "error": error,
-            "detectedBumps": detected_bumps,
+            "tp": prepared_tp,
+            "fp": prepared_fp,
+            "fn": prepared_fn,
             "stats": statistic
         }
         results.append(algorithm_data)

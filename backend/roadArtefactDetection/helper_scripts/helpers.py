@@ -68,7 +68,7 @@ def bump_tuplepoint(bumps, index):
     return bump[0], bump[1]
 
 
-def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
+def true_positives_v1(possible_tuplepoints, bumps_tuplepoints, distance):
     """
     Returns true positives: points, which are in the near distance
     to the points marked by the user as the real artefacts
@@ -85,6 +85,51 @@ def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
                 break
 
     return results
+
+def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
+    """
+    Returns true positives: points, which are in the near distance
+    to the points marked by the user as the real artefacts
+    """
+
+    tp = []
+    fp = []
+    fn = []
+    if len(bumps_tuplepoints) == 0 or len(possible_tuplepoints) == 0:
+        return tp, fp, fn
+
+    is_detected = False
+    for i in range(len(bumps_tuplepoints)):
+        for j in range(len(possible_tuplepoints)):
+            if haversine_point(bumps_tuplepoints[i], possible_tuplepoints[j]) < distance:
+                tp.append(possible_tuplepoints[j])
+                is_detected = True
+                break
+        if not is_detected:
+            fn.append(bumps_tuplepoints[i])
+            is_detected = False
+
+    # print("----------------------possible_tuplepoints-----------------------")
+    # print(possible_tuplepoints)
+    # print("--------------------------tp---------------------------------")
+    # print(tp)
+
+    is_tp = False
+    for possible_survey in possible_tuplepoints:
+        for tp_survey in tp:
+            if possible_survey[0] == tp_survey[0] and possible_survey[1] == tp_survey[1]:
+                is_tp = True
+                break
+        if not is_tp:
+            fp.append(possible_survey)
+        is_tp = False
+
+    # print("---------------------------fp-------------------------------")
+    # print(fp)
+    # print("--------------------------fn-------------------------------")
+    # print(fn)
+
+    return tp, fp, fn
 
 
 def bumps_to_tuplepoints(bumps):

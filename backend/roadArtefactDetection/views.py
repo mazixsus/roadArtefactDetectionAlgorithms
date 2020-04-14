@@ -18,23 +18,23 @@ TIMEOUT = 5
 def add_survey(request):
 
     if request.method != 'POST' or 'survey' not in request.FILES or 'bumps' not in request.FILES:
-        return HttpResponse(status=400)
+        return HttpResponse('Błędne zapytanie.', status=400)
 
     data_file = request.FILES['survey']
     bumps_file = request.FILES['bumps']
     data_file_name = data_file.name
 
     if not data_file_name.endswith('.csv'):
-        return HttpResponse('File is not csv.', status=400)
+        return HttpResponse('Przesłany plik nie jest w formacie csv.', status=400)
 
     csv_data_file = pandas.read_csv(data_file)
     csv_bumps_file = pandas.read_csv(bumps_file)
 
-    if not (csv_bumps_file.columns == BUMPS_COL_LABEL).all():
-        return HttpResponse('Bumps file not valid.')
+    if len(csv_bumps_file.columns) != len(BUMPS_COL_LABEL) or not (csv_bumps_file.columns == BUMPS_COL_LABEL).all():
+        return HttpResponse('Błędna struktura pliku z progami.', status=400)
 
-    if not (csv_data_file.columns == DATA_COL_LABEL).all():
-        return HttpResponse('Data file not valid.')
+    if len(csv_data_file.columns) != len(DATA_COL_LABEL) or not (csv_data_file.columns == DATA_COL_LABEL).all():
+        return HttpResponse('Błędna struktura pliku z pomiarami.', status=400)
 
     survey_id = save_files(data_file, bumps_file, DATA_PATH, BUMPS_PATH)
 
@@ -48,14 +48,14 @@ def add_survey(request):
 def get_results(request):
 
     if request.method != 'GET' or 'surveyId' not in request.GET:
-        return HttpResponse(status=400)
+        return HttpResponse('Błędne zapytanie.', status=400)
 
     survey_id_str = request.GET['surveyId']
 
     try:
         survey_id = int(survey_id_str)
     except ValueError:
-        return HttpResponse(status=400)
+        return HttpResponse('Błędne zapytanie.', status=400)
 
     filenames = os.listdir(DATA_PATH)
     file_path = DATA_PATH+filenames[survey_id]
@@ -69,7 +69,7 @@ def get_results(request):
 def get_survey_names(request):
 
     if request.method != 'GET':
-        return HttpResponse(status=400)
+        return HttpResponse('Błędne zapytanie.', status=400)
 
     filenames = os.listdir(DATA_PATH)
 
@@ -79,20 +79,19 @@ def get_survey_names(request):
         result.append(file)
 
     return HttpResponse(json.dumps(result))
-    # return HttpResponse(status=400)
 
 
 def get_bumps(request):
 
     if request.method != 'GET' or 'surveyId' not in request.GET:
-        return HttpResponse(status=400)
+        return HttpResponse('Błędne zapytanie.', status=400)
 
     survey_id_str = request.GET['surveyId']
 
     try:
         survey_id = int(survey_id_str)
     except ValueError:
-        return HttpResponse(status=400)
+        return HttpResponse('Błędne zapytanie.', status=400)
 
     filenames = os.listdir(BUMPS_PATH)
     bumps = pandas.read_csv(BUMPS_PATH+filenames[survey_id])
