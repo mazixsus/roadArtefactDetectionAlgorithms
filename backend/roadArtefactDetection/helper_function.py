@@ -32,7 +32,7 @@ def get_alg_result(data):
     return {
         0: count_time(algorithms.z_thresh, data, 1.2),
         1: count_time(algorithms.z_diff, data, 3),
-        2: count_time(algorithms.stdev_alg, data, 0.25, 50),
+        2: count_time(algorithms.stdev_alg, data, 0.15, 50),
         3: count_time(algorithms.g_zero, data, 0.8),
         4: count_time(algorithms.mod_z_thresh, data, 4.3),
         5: count_time(algorithms.f_thresh, data, 50, 1, 1)
@@ -45,15 +45,18 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
 
     true_positives_count = len(true_positives)
 
-    accuracy = float(0.0)
+    sensitivity = float(0.0)
     if len(bumps) > 0:
-        accuracy = float(true_positives_count / len(bumps) * 100)
+        sensitivity = float(true_positives_count / len(bumps) * 100)
 
     false_positives_count = len(false_positives)
     false_negatives_count = len(false_negatives)
 
+    precision = true_positives_count/(true_positives_count + false_positives)
+
     return {
-        "acc": round(accuracy, 2),
+        "sens": round(sensitivity, 2),
+        "prec":  round(precision, 2),
         "tp": true_positives_count,
         "fp": false_positives_count,
         "fn": false_negatives_count,

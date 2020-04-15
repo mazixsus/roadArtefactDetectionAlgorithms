@@ -111,7 +111,7 @@ def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
                 break
         if not is_detected:
             fn.append(bumps_tuplepoints[i])
-            is_detected = False
+        is_detected = False
 
     # print("----------------------possible_tuplepoints-----------------------")
     # print(possible_tuplepoints)
@@ -163,8 +163,7 @@ def group_duplicates(tuplepoints, distance, timeout):
     for i in range(len(tuplepoints)):
         found = False
         for j in range(len(result)):
-            # print(ccdfp.haversine_point(tuplepoints[i], result[j]))
-            if haversine_point(tuplepoints[i], tuplepoints[j]) < distance:
+            if haversine_point(tuplepoints[i], result[j]) < distance:
                 found = True
 
         if not found:

@@ -53,13 +53,13 @@ def main():
         bumps = pandas.read_csv(bumps_paths[data_index])
 
         # threshold for z-thresh: 1.2, z-diff: 3, stdev(Z): 0.25, g-zero: 0.8, mod-z-thresh: 4.3
-        threshold = 3
+        threshold = 0.15
         window_size = 50
 
         prev_time = time.perf_counter()
         # result = algorithms.z_thresh(data, threshold)
-        result = algorithms.z_diff(data, threshold)
-        # result = algorithms.stdev_alg(data, threshold, window_size)
+        # result = algorithms.z_diff(data, threshold)
+        result = algorithms.stdev_alg(data, threshold, window_size)
         # result = algorithms.g_zero(data, threshold)
         # result = algorithms.mod_z_thresh(data, threshold)
         # result = algorithms.my_alg(data, window_size)
