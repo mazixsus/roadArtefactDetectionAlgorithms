@@ -6,7 +6,9 @@ import Information from "./Information";
 
 export default function AlgorithmTabContent({results, bumps, algorithmId}) {
     const [algorithmStats, setAlgorithmStats] = useState([]);
-    const [algorithmDetectedBumps, setAlgorithmDetectedBumps] = useState([]);
+    const [algorithmTruePositives, setAlgorithmTruePositives] = useState([]);
+    const [algorithmFalsePositives, setAlgorithmFalsePositives] = useState([]);
+    const [algorithmFalseNegatives, setAlgorithmFalseNegatives] = useState([]);
     const [isError, setIsError] = useState(false);
 
     //selecting data for current algorithm
@@ -17,7 +19,9 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
         } else {
             setIsError(false);
             setAlgorithmStats(selectedAlgorithmData.stats);
-            setAlgorithmDetectedBumps(selectedAlgorithmData.detectedBumps)
+            setAlgorithmTruePositives(selectedAlgorithmData.tp);
+            setAlgorithmFalsePositives(selectedAlgorithmData.fp);
+            setAlgorithmFalseNegatives(selectedAlgorithmData["fn"]);
         }
     }, [algorithmId, results, isError]);
 
@@ -38,7 +42,9 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
                     <Grid item xs={9}>
                         <AlgorithmMap
                             bumps={bumps}
-                            detectedBumps={algorithmDetectedBumps}
+                            truePositives={algorithmTruePositives}
+                            falsePositives={algorithmFalsePositives}
+                            falseNegatives={algorithmFalseNegatives}
                         />
                     </Grid>
                 </Grid>

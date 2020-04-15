@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     })
 );
 
-const tableLabels = ['Precyzja', 'TPR', 'FPR','FNR','Czas'];
+const tableLabels = ['Czułość', 'TP', 'FP','FN','Czas'];
 
 export default function AlgorithmStats({stats}) {
     const classes = useStyles();
