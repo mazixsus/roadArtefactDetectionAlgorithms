@@ -52,7 +52,7 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
     false_positives_count = len(false_positives)
     false_negatives_count = len(false_negatives)
 
-    precision = true_positives_count/(true_positives_count + false_positives_count)
+    precision = true_positives_count/(true_positives_count + false_positives_count)*100
 
     return {
         "sens": round(sensitivity, 2),
