@@ -49,8 +49,9 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
     if len(bumps) > 0:
         accuracy = float(true_positives_count / len(bumps) * 100)
 
-    false_positives_count = len(possible_points_grouped) - true_positives_count
-    false_negatives_count = len(bumps) - true_positives_count
+    false_positives_count = len(false_positives)
+    false_negatives_count = len(false_negatives)
+
     return {
         "acc": round(accuracy, 2),
         "tp": true_positives_count,

@@ -95,7 +95,11 @@ def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
     tp = []
     fp = []
     fn = []
-    if len(bumps_tuplepoints) == 0 or len(possible_tuplepoints) == 0:
+    if len(bumps_tuplepoints) == 0:
+        return tp, fp, fn
+
+    if len(possible_tuplepoints) == 0:
+        fn = bumps_tuplepoints
         return tp, fp, fn
 
     is_detected = False
