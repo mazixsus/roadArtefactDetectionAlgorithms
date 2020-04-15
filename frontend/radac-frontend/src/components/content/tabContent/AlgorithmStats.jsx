@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     })
 );
 
-const tableLabels = ['Czułość', 'TP', 'FP','FN','Czas'];
+const tableLabels = ['Czułość','Precyzja', 'TP', 'FP','FN','Czas'];
 
 export default function AlgorithmStats({stats}) {
     const classes = useStyles();
@@ -25,7 +25,8 @@ export default function AlgorithmStats({stats}) {
             <Typography className={classes.listItem} component={"h2"} variant={"h6"} noWrap>
                 {element[1]}
                 {index === 0 && '%'}
-                {index === 4 && ' ms'}
+                {index === 1 && '%'}
+                {index === 5 && ' ms'}
             </Typography>
         </ListItem>
     );

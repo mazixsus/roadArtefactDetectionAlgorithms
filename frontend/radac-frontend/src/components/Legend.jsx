@@ -46,7 +46,7 @@ export default function Legend({open, close}) {
                     </Grid>
                     <Grid item xs={10}>
                         <Typography component={"h2"} variant={"h6"}>
-                            Wyboje wykryte przez algorytm prawidłowo
+                            Wyboje wykryte przez algorytm prawidłowo.
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
@@ -54,7 +54,7 @@ export default function Legend({open, close}) {
                     </Grid>
                     <Grid item xs={10}>
                         <Typography component={"h2"} variant={"h6"}>
-                            Wyboje wykryte przez algorytm nieprawidłowo
+                            Wyboje wykryte przez algorytm nieprawidłowo.
                         </Typography>
                     </Grid>
                     <Grid item xs={2}>
@@ -62,7 +62,7 @@ export default function Legend({open, close}) {
                     </Grid>
                     <Grid item xs={10}>
                         <Typography component={"h2"} variant={"h6"}>
-                            Wyboje nie wykryte przez algorytm
+                            Wyboje nie wykryte przez algorytm.
                         </Typography>
                     </Grid>
                 </Grid>
