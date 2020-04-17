@@ -30,10 +30,14 @@ def count_time(function, *args):
 
 def get_alg_result(data):
     return {
+        # 1.1 - 1.2
         0: count_time(algorithms.z_thresh, data, 1.2),
+        # 2 - 4 ale chyba może zostać 3
         1: count_time(algorithms.z_diff, data, 3),
-        2: count_time(algorithms.stdev_alg, data, 0.15, 50),
-        3: count_time(algorithms.g_zero, data, 0.8),
+        # w:5 0.18, w:8 0.187, w:10 0.168; moim zdaniem w:10 najlepsze; w - rozmiar okna
+        2: count_time(algorithms.stdev_alg, data, 0.168, 10),
+        # 0.75 - 0.8; 0.775 najlepiej chyba
+        3: count_time(algorithms.g_zero, data, 0.775),
         4: count_time(algorithms.mod_z_thresh, data, 4.3),
         5: count_time(algorithms.f_thresh, data, 50, 1, 1)
     }

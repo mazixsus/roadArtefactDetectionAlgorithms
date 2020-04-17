@@ -5,7 +5,6 @@ import AlgorithmTabContent from "./AlgorithmTabContent";
 import {
     algorithmNamesFetched,
     selectSurvey,
-    surveyBumpsFetched,
     surveyResultsFetched
 } from "../../redux/actions";
 import {connect} from "react-redux";
@@ -18,15 +17,12 @@ function DashboardContent(props) {
     const [isSurveyResultsLoaded, setIsSurveyResultsLoaded] = useState(false);
     const [isSurveyResultsLoading, setIsSurveyResultsLoading] = useState(false);
 
-    const [isSurveyBumpsLoaded, setIsSurveyBumpsLoaded] = useState(false);
-    const [isSurveyBumpsLoading, setIsSurveyBumpsLoading] = useState(false);
 
     const [isError, setIsError] = useState(false);
 
     //detecting survey change
     useEffect(() => {
         setIsSurveyResultsLoaded(false);
-        setIsSurveyBumpsLoaded(false);
     }, [props.selectedSurvey]);
 
     //fetching survey results
@@ -57,32 +53,6 @@ function DashboardContent(props) {
 
     }, [props, isSurveyResultsLoaded, isSurveyResultsLoading, isError]);
 
-    //fetching survey bumps
-    useEffect(() => {
-        if (!isSurveyBumpsLoaded && !isError && !isSurveyBumpsLoading && props.selectedSurvey !== null) {
-            setIsSurveyBumpsLoading(true);
-            fetch("/survey/bumps?surveyId=" + props.selectedSurvey)
-                .then(res => {
-                        if (!res.ok) {
-                            throw Error(res.statusText);
-                        }
-                        return res.json()
-                    }
-                )
-                .then(json => {
-                    props.surveyBumpsFetched(json);
-                })
-                .then(() => {
-                    setIsError(false);
-                    setIsSurveyBumpsLoaded(true);
-                    setIsSurveyBumpsLoading(false);
-                })
-                .catch(() => {
-                    setIsSurveyBumpsLoading(false);
-                    setIsError(true)
-                });
-        }
-    }, [props, isSurveyBumpsLoaded, isSurveyBumpsLoading, isError]);
 
     const algorithmNames = props.surveyResults.map((element) =>
         <Tab key={element.algorithmId} label={element.algorithmName}/>
@@ -95,11 +65,6 @@ function DashboardContent(props) {
 
     const getAlgorithmId = () => {
         return props.surveyResults[value].algorithmId
-    };
-
-    const isTabContentDataLoaded = () => {
-        return isSurveyResultsLoaded &&
-            isSurveyBumpsLoaded;
     };
 
     return (
@@ -121,12 +86,11 @@ function DashboardContent(props) {
                     >
                         {isSurveyResultsLoaded && algorithmNames}
                     </Tabs>
-                    {!isTabContentDataLoaded()
+                    {!isSurveyResultsLoaded
                         ? <StyledCircularProgress/>
                         :
                         <AlgorithmTabContent
                             results={props.surveyResults}
-                            bumps={props.surveyBumps}
                             algorithmId={getAlgorithmId()}
                         />
                     }
@@ -140,14 +104,12 @@ const mapStateToProps = (state) => {
     return {
         algorithmNames: state.algorithmNames,
         surveyResults: state.surveyResults,
-        surveyBumps: state.surveyBumps,
         selectedSurvey: state.selectedSurvey
     }
 };
 const mapDispatchToProps = {
     algorithmNamesFetched,
     surveyResultsFetched,
-    surveyBumpsFetched,
     selectSurvey
 };
 

@@ -4,7 +4,7 @@ import AlgorithmMap from "./tabContent/AlgorithmMap";
 import Grid from "@material-ui/core/Grid";
 import Information from "./Information";
 
-export default function AlgorithmTabContent({results, bumps, algorithmId}) {
+export default function AlgorithmTabContent({results, algorithmId}) {
     const [algorithmStats, setAlgorithmStats] = useState([]);
     const [algorithmTruePositives, setAlgorithmTruePositives] = useState([]);
     const [algorithmFalsePositives, setAlgorithmFalsePositives] = useState([]);
@@ -41,7 +41,6 @@ export default function AlgorithmTabContent({results, bumps, algorithmId}) {
                     </Grid>
                     <Grid item xs={9}>
                         <AlgorithmMap
-                            bumps={bumps}
                             truePositives={algorithmTruePositives}
                             falsePositives={algorithmFalsePositives}
                             falseNegatives={algorithmFalseNegatives}
