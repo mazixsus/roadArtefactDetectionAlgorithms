@@ -43,7 +43,7 @@ def get_alg_result(data):
     }
 
 
-def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
+def get_statistic_and_points(possible_points_grouped, bumps, realize_time, row_count):
     true_positives, false_positives, false_negatives = helpers.true_positives(
         possible_points_grouped, helpers.bumps_to_tuplepoints(bumps), 20)
 
@@ -56,7 +56,10 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
     false_positives_count = len(false_positives)
     false_negatives_count = len(false_negatives)
 
-    precision = true_positives_count/(true_positives_count + false_positives_count)*100
+    try:
+        precision = true_positives_count/(true_positives_count + false_positives_count)*100
+    except ZeroDivisionError:
+        precision = 0
 
     return {
         "sens": round(sensitivity, 2),
@@ -64,7 +67,7 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time):
         "tp": true_positives_count,
         "fp": false_positives_count,
         "fn": false_negatives_count,
-        "time": round(realize_time*1000, 0)
+        "time": round(realize_time*1000/(row_count/100), 2)
     }, true_positives, false_positives, false_negatives
 
 
@@ -74,7 +77,7 @@ def handle_uploaded_file(path, file):
             destination.write(chunk)
 
 
-def save_files(data_file, bumps_file, data_path, bumps_path):
+def save_files_v2(data_file, bumps_file, data_path, bumps_path):
     filenames = os.listdir(data_path)
     counter = 0
     data_file_name = data_file.name
@@ -95,15 +98,35 @@ def save_files(data_file, bumps_file, data_path, bumps_path):
     return filenames.index(data_file_name)
 
 
+def save_files(data_file, bumps_file, data_file_name, data_path, bumps_path):
+    filenames = os.listdir(data_path)
+    counter = 0
+    if data_file_name in filenames:
+        data_file_name = data_file_name.replace(".csv", "(" + str(counter) + ").csv")
+        while data_file_name in filenames:
+            counter += 1
+            data_file_name = data_file_name.replace("(" + str(counter - 1) + ").csv", "(" + str(counter) + ").csv")
+
+    data_file_path = data_path + data_file_name
+    bumps_file_path = bumps_path + data_file_name.replace('.csv', '(bumps).csv')
+    data_file.to_csv(data_file_path, index=False)
+    bumps_file.to_csv(bumps_file_path, index=False)
+
+    filenames = os.listdir(data_path)
+    print(filenames.index(data_file_name))
+
+    return filenames.index(data_file_name)
+
+
 def run_algorithms(data, bumps, timeout):
     results = []
-
+    row_count = data.shape[0]
     for i in range(0, 6):
         alg_result = get_alg_result(data)[i]
         grouped_possible_artefacts = helpers.group_duplicates(alg_result[0], 20, timeout)
         if grouped_possible_artefacts is not None:
             error = False
-            statistic, tp, fp, fn = get_statistic_and_points(grouped_possible_artefacts, bumps, alg_result[1])
+            statistic, tp, fp, fn = get_statistic_and_points(grouped_possible_artefacts, bumps, alg_result[1], row_count)
             prepared_tp = prepare_results(tp)
             prepared_fp = prepare_results(fp)
             prepared_fn = prepare_results(fn)
