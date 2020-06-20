@@ -1,12 +1,19 @@
-import os
-import signal
 import time
-from threading import Thread
 
-from roadArtefactDetection import algorithms
-from roadArtefactDetection.helper_scripts import helpers
+from roadArtefactDetection.algorithms_scripts import helpers, algorithms
 
 ALGORITHM_NAMES = ["Z-THRESH", "Z-DIFF", "STDEV", "G-ZERO", "MOD-Z-THRESH", "F-THRESH"]
+
+
+def get_alg_result(data):
+    return {
+        0: count_time(algorithms.z_thresh, data, 1.2),
+        1: count_time(algorithms.z_diff, data, 3),
+        2: count_time(algorithms.stdev_alg, data, 0.168, 10),
+        3: count_time(algorithms.g_zero, data, 0.775),
+        4: count_time(algorithms.mod_z_thresh, data, 4.3),
+        5: count_time(algorithms.f_thresh, data, 50, 1, 1)
+    }
 
 
 def prepare_results(artefacts_positions):
@@ -26,21 +33,6 @@ def count_time(function, *args):
     result = function(*args)
     realize_time = time.perf_counter() - prev_time
     return result, realize_time
-
-
-def get_alg_result(data):
-    return {
-        # 1.1 - 1.2
-        0: count_time(algorithms.z_thresh, data, 1.2),
-        # 2 - 4 ale chyba może zostać 3
-        1: count_time(algorithms.z_diff, data, 3),
-        # w:5 0.18, w:8 0.187, w:10 0.168; moim zdaniem w:10 najlepsze; w - rozmiar okna
-        2: count_time(algorithms.stdev_alg, data, 0.168, 10),
-        # 0.75 - 0.8; 0.775 najlepiej chyba
-        3: count_time(algorithms.g_zero, data, 0.775),
-        4: count_time(algorithms.mod_z_thresh, data, 4.3),
-        5: count_time(algorithms.f_thresh, data, 50, 1, 1)
-    }
 
 
 def get_statistic_and_points(possible_points_grouped, bumps, realize_time, row_count):
@@ -71,57 +63,11 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time, row_c
     }, true_positives, false_positives, false_negatives
 
 
-def handle_uploaded_file(path, file):
-    with open(path, 'wb+') as destination:
-        for chunk in file.chunks():
-            destination.write(chunk)
-
-
-def save_files_v2(data_file, bumps_file, data_path, bumps_path):
-    filenames = os.listdir(data_path)
-    counter = 0
-    data_file_name = data_file.name
-    if data_file_name in filenames:
-        data_file_name = data_file_name.replace(".csv", "(" + str(counter) + ").csv")
-        while data_file_name in filenames:
-            counter += 1
-            data_file_name = data_file_name.replace("(" + str(counter - 1) + ").csv", "(" + str(counter) + ").csv")
-
-    data_file_path = data_path + data_file_name
-    bumps_file_path = bumps_path + data_file_name.replace('.csv', '(bumps).csv')
-    handle_uploaded_file(data_file_path, data_file)
-    handle_uploaded_file(bumps_file_path, bumps_file)
-
-    filenames = os.listdir(data_path)
-    print(filenames.index(data_file_name))
-
-    return filenames.index(data_file_name)
-
-
-def save_files(data_file, bumps_file, data_file_name, data_path, bumps_path):
-    filenames = os.listdir(data_path)
-    counter = 0
-    if data_file_name in filenames:
-        data_file_name = data_file_name.replace(".csv", "(" + str(counter) + ").csv")
-        while data_file_name in filenames:
-            counter += 1
-            data_file_name = data_file_name.replace("(" + str(counter - 1) + ").csv", "(" + str(counter) + ").csv")
-
-    data_file_path = data_path + data_file_name
-    bumps_file_path = bumps_path + data_file_name.replace('.csv', '(bumps).csv')
-    data_file.to_csv(data_file_path, index=False)
-    bumps_file.to_csv(bumps_file_path, index=False)
-
-    filenames = os.listdir(data_path)
-    print(filenames.index(data_file_name))
-
-    return filenames.index(data_file_name)
-
-
 def run_algorithms(data, bumps, timeout):
     results = []
     row_count = data.shape[0]
-    for i in range(0, 6):
+
+    for i in range(len(ALGORITHM_NAMES)):
         alg_result = get_alg_result(data)[i]
         grouped_possible_artefacts = helpers.group_duplicates(alg_result[0], 20, timeout)
         if grouped_possible_artefacts is not None:

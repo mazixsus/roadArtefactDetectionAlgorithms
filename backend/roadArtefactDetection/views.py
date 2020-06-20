@@ -1,15 +1,13 @@
 import os
 import json
-import roadArtefactDetection.helper_scripts.helpers as helpers
 import pandas
-import math
-import datetime
-from decimal import *
-from dateutil.parser import parse
 
-from django.http import HttpResponse, HttpResponseNotFound
+
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from roadArtefactDetection.helper_function import run_algorithms, prepare_results, save_files, save_files_v2
+from roadArtefactDetection.app_helper_scripts.research_helper import run_algorithms
+from roadArtefactDetection.app_helper_scripts.file_helper import save_files, prepare_data_csv, prepare_bumps_csv
+
 
 DATA_PATH = './roadArtefactDetection/data/'
 BUMPS_PATH = './roadArtefactDetection/bumps/'
@@ -62,58 +60,11 @@ def add_survey(request):
     return HttpResponse(json.dumps(result))
 
 
-def prepare_bumps_csv(csv_bumps_file):
-    indexes = []
-    for index, row in csv_bumps_file.iterrows():
-        for value in row[0:2]:
-            if value == 0 or check_numeric(value):
-                indexes.append(index)
-                break
-    return csv_bumps_file.drop(indexes)
-
-
-def prepare_data_csv(csv_data_file):
-    indexes = []
-    for index, row in csv_data_file.iterrows():
-        if not check_date(row[8]):
-            indexes.append(index)
-            continue
-        for value in row[0:8]:
-            if value == 0 or check_numeric(value):
-                indexes.append(index)
-                break
-    print("Deleted indexes:" + str(indexes))
-    return csv_data_file.drop(indexes)
-
-
-def check_date(date):
-    try:
-        parse(date)
-    except ValueError:
-        return False
-    except TypeError:
-        try:
-            isinstance(date, pandas.Timestamp)
-            return not pandas.isna(date)
-        except TypeError:
-            return False
-    return True
-
-
-def check_numeric(value):
-    try:
-        float_value = float(value)
-    except ValueError:
-        return True
-    return math.isnan(float_value)
-
-
 def get_results(request):
     if request.method != 'GET' or 'surveyId' not in request.GET:
         return HttpResponse('Błędne zapytanie.', status=400)
 
     survey_id_str = request.GET['surveyId']
-
     try:
         survey_id = int(survey_id_str)
     except ValueError:
@@ -122,8 +73,10 @@ def get_results(request):
     filenames = os.listdir(DATA_PATH)
     file_path = DATA_PATH + filenames[survey_id]
     bumps_file_path = BUMPS_PATH + filenames[survey_id].replace(".csv", "(bumps).csv")
+
     data = pandas.read_csv(file_path, parse_dates=['Time'])
     bumps = pandas.read_csv(bumps_file_path)
+
     result = run_algorithms(data, bumps, TIMEOUT)
     return HttpResponse(json.dumps(result))
 
@@ -142,18 +95,18 @@ def get_survey_names(request):
     return HttpResponse(json.dumps(result))
 
 
-def get_bumps(request):
-    if request.method != 'GET' or 'surveyId' not in request.GET:
-        return HttpResponse('Błędne zapytanie.', status=400)
-
-    survey_id_str = request.GET['surveyId']
-
-    try:
-        survey_id = int(survey_id_str)
-    except ValueError:
-        return HttpResponse('Błędne zapytanie.', status=400)
-
-    filenames = os.listdir(BUMPS_PATH)
-    bumps = pandas.read_csv(BUMPS_PATH + filenames[survey_id])
-    bumps_tuplepoints = helpers.bumps_to_tuplepoints(bumps)
-    return HttpResponse(json.dumps(prepare_results(bumps_tuplepoints)))
+# def get_bumps(request):
+#     if request.method != 'GET' or 'surveyId' not in request.GET:
+#         return HttpResponse('Błędne zapytanie.', status=400)
+#
+#     survey_id_str = request.GET['surveyId']
+#
+#     try:
+#         survey_id = int(survey_id_str)
+#     except ValueError:
+#         return HttpResponse('Błędne zapytanie.', status=400)
+#
+#     filenames = os.listdir(BUMPS_PATH)
+#     bumps = pandas.read_csv(BUMPS_PATH + filenames[survey_id])
+#     bumps_tuplepoints = helpers.bumps_to_tuplepoints(bumps)
+#     return HttpResponse(json.dumps(prepare_results(bumps_tuplepoints)))

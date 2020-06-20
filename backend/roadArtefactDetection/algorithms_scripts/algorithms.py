@@ -1,10 +1,8 @@
 import math
 import statistics
-import numpy
-from scipy.signal import argrelextrema
 
-import roadArtefactDetection.helper_scripts.helpers as helpers
-from roadArtefactDetection.helper_scripts import fthresh
+import roadArtefactDetection.algorithms_scripts.helpers as helpers
+from roadArtefactDetection.algorithms_scripts import fthresh
 
 
 def z_thresh(data, threshold):
@@ -13,10 +11,8 @@ def z_thresh(data, threshold):
     """
     result = list()
     for index, survey in data.iterrows():
-
         if abs(survey[5]) > threshold:
             result.append(survey[6:8])
-    # print("{0}".format(result))
     return result
 
 
@@ -34,10 +30,8 @@ def z_diff(data, threshold):
             continue
 
         diff = (survey[5] - prev_survey[5]) / (survey[8] - prev_survey[8]).total_seconds()
-        # print(abs(diff))
         if abs(diff) > threshold:
             result.append(survey[6:8])
-        # print("{0}".format(result))
         prev_survey = survey
     return result
 
@@ -47,7 +41,6 @@ def stdev_alg(data, threshold, window_size):
     for index, survey in data[window_size:].iterrows():
         zaxis_data_window = list(data.iloc[list(range(index - window_size, index)), 5])
         stdev_val = statistics.stdev(zaxis_data_window)
-        # print(stdev_val)
         if stdev_val > threshold:
             result.append(survey[6:8])
     return result
@@ -64,7 +57,6 @@ def g_zero(data, threshold):
         # print(a)
         if a < threshold:
             result.append(survey[6:8])
-    # print("{0}".format(result))
     return result
 
 
@@ -73,9 +65,6 @@ def f_thresh(data, window_size, quality_variant, threshold_variant):
     for i in helpers.tumbling_window(data, window_size):
         for j in fthresh.possible(i, quality_variant, threshold_variant):
             result.append(j)
-            # print(j)
-            # p = i[j:j + 1][['Latitude', 'Longitude']].values[0]
-            # result.append((p[0], p[1]))
     return result
 
 
@@ -93,54 +82,48 @@ def mod_z_thresh(data, threshold):
     return result
 
 
-def my_alg(data, window_size):
-    result = list()
-    global_avg = 0
-    start_diff = 0.2
-
-    global_diff = start_diff
-    for i in helpers.tumbling_window(data, window_size):
-        sorted_i = i.sort_values(by=['Z2'])
-        # print(sorted_i)
-        index = 0
-        artefact_sector = 0
-        break_diff = 0
-        avg_end = 0
-
-        for j in helpers.tumbling_window(sorted_i, 5):
-            if index == 0:
-                prev_avg = j.Z2.agg('average')
-                avg_end = prev_avg
-                first_segment = j
-                # print(prev_avg)
-            else:
-                curr_avg = j.Z2.agg('average')
-                diff = abs(prev_avg - curr_avg)
-
-                if (diff > global_diff) and (1 <= index <= 5):
-                    break_diff = diff
-                    artefact_sector = 1
-                    avg_end = curr_avg
-                elif diff > start_diff and artefact_sector != 1:
-                    break_diff = diff
-                prev_avg = curr_avg
-                # print(diff)
-                # print("--------------------------------")
-
-            index += 1
-        # avg_end = avg if avg_end == 0 else avg_end
-
-        global_avg = (global_avg + avg_end)/2 if avg_end != 0 else global_avg
-        global_diff = (global_diff + break_diff)/2 if break_diff != 0 else global_diff
-        # global_diff = break_diff if break_diff != 0 else global_diff
-
-        if artefact_sector == 1:
-            for index, survey in i.iterrows():
-                if abs(survey[5]) > abs(global_avg)+global_diff:
-                    result.append(survey[6:8])
-        else:
-            for index, survey in first_segment.iterrows():
-                if abs(survey[5]) > abs(global_avg)+global_diff:
-                    result.append(survey[6:8])
-
-    return result
+# def my_alg(data, window_size):
+#     result = list()
+#     global_avg = 0
+#     start_diff = 0.2
+#
+#     global_diff = start_diff
+#     for i in helpers.tumbling_window(data, window_size):
+#         sorted_i = i.sort_values(by=['Z2'])
+#         index = 0
+#         artefact_sector = 0
+#         break_diff = 0
+#         avg_end = 0
+#
+#         for j in helpers.tumbling_window(sorted_i, 5):
+#             if index == 0:
+#                 prev_avg = j.Z2.agg('average')
+#                 avg_end = prev_avg
+#                 first_segment = j
+#             else:
+#                 curr_avg = j.Z2.agg('average')
+#                 diff = abs(prev_avg - curr_avg)
+#
+#                 if (diff > global_diff) and (1 <= index <= 5):
+#                     break_diff = diff
+#                     artefact_sector = 1
+#                     avg_end = curr_avg
+#                 elif diff > start_diff and artefact_sector != 1:
+#                     break_diff = diff
+#                 prev_avg = curr_avg
+#
+#             index += 1
+#
+#         global_avg = (global_avg + avg_end)/2 if avg_end != 0 else global_avg
+#         global_diff = (global_diff + break_diff)/2 if break_diff != 0 else global_diff
+#
+#         if artefact_sector == 1:
+#             for index, survey in i.iterrows():
+#                 if abs(survey[5]) > abs(global_avg)+global_diff:
+#                     result.append(survey[6:8])
+#         else:
+#             for index, survey in first_segment.iterrows():
+#                 if abs(survey[5]) > abs(global_avg)+global_diff:
+#                     result.append(survey[6:8])
+#
+#     return result

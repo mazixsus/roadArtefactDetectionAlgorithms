@@ -1,28 +1,26 @@
-# roadArtefactDetectionAlgorithms
+# Frontend application 
 
-### Z-THRESH
-- TP: 5 Acc: (83.33%) FP: 10 FN: 1 Threshold: 1.2
-- TP: 7 Acc: (77.78%) FP: 8 FN: 2 Threshold: 1.2
-- TP: 6 Acc: (100.00%) FP: 5 FN: 0 Threshold: 1.2
 
-### Z-DIFF
-- TP: 6 Acc: (100.00%) FP: 19 FN: 0 Threshold: 3
-- TP: 4 Acc: (44.44%) FP: 10 FN: 5 Threshold: 3
-- TP: 6 Acc: (100.00%) FP: 23 FN: 0 Threshold: 3
-<br />
+# Backend application 
 
-- TP: 5 Acc: (83.33%) FP: 5 FN: 1 Threshold: 4
-- TP: 2 Acc: (22.22%) FP: 2 FN: 7 Threshold: 4
-- TP: 4 Acc: (66.67%) FP: 5 FN: 2 Threshold: 4
+### Requirement to run server application:
+Python (version used in project: 3.7.6)
+Django (version used in project: 3.0.4)
+pandas packages
 
-### STDEV(Z)
-Window size: 5
+### How to run:
+To run application open in the project folder command console and type "python manage.py runserver 8000".
 
-- TP: 5 Acc: (83.33%) FP: 15 FN: 1 Threshold: 0.25
-- TP: 4 Acc: (44.44%) FP: 3 FN: 5 Threshold: 0.25
-- TP: 6 Acc: (100.00%) FP: 17 FN: 0 Threshold: 0.25
-
-### G-ZERO
-- TP: 5 Acc: (83.33%) FP: 5 FN: 1 Threshold: 0.8
-- TP: 7 Acc: (77.78%) FP: 8 FN: 2 Threshold: 0.8
-- TP: 6 Acc: (100.00%) FP: 45 FN: 0 Threshold: 0.8
+### Add new algorithm instruction:
+1.	-Implementation of algorithm need to be located in algorithms.py script in folder roadArtefactDetection/algorithms_scripts.
+	-The function need to return python list with Latitude and Longitude of points.
+2. 	-Go to script research_helper.py located in roadArtefactDetection/app_helper_scripts.
+	-Add to the global array ALGORITHM_NAMES name of new algorithm. (important)
+	-Add to the function get_alg_result call of new algorithm function with pattern:
+		alg_number: count_time(algorithms.alg_function_name, first_fun_var, second_var, ... , n_var).
+	
+### Additional info about algorithms thresholds:
+Z-THRESH - 1.1 - 1.2
+Z-DIFF - 2 - 4
+STDEV- windows/threshold 5/0.18 - 8/0.187
+G-ZERO - 0.75 - 0.8
