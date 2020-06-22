@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.jsx';
 import {store} from "./redux/store";
 import {Provider} from "react-redux";
 
 import * as serviceWorker from './serviceWorker';
+import Dashboard from "./components/Dashboard";
 
 ReactDOM.render(
     <Provider store={store}>
-        <App/>
+        <Dashboard/>
     </Provider>
     , document.getElementById('root'));
 
