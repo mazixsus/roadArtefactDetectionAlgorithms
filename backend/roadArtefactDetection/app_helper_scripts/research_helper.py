@@ -16,6 +16,13 @@ def get_alg_result(data):
     }
 
 
+def count_time(function, *args):
+    prev_time = time.perf_counter()
+    result = function(*args)
+    realize_time = time.perf_counter() - prev_time
+    return result, realize_time
+
+
 def prepare_results(artefacts_positions):
     surveys = []
     for artefact in artefacts_positions:
@@ -28,15 +35,8 @@ def prepare_results(artefacts_positions):
     return surveys
 
 
-def count_time(function, *args):
-    prev_time = time.perf_counter()
-    result = function(*args)
-    realize_time = time.perf_counter() - prev_time
-    return result, realize_time
-
-
 def get_statistic_and_points(possible_points_grouped, bumps, realize_time, row_count):
-    true_positives, false_positives, false_negatives = helpers.true_positives(
+    true_positives, false_positives, false_negatives = helpers.classify(
         possible_points_grouped, helpers.bumps_to_tuplepoints(bumps), 20)
 
     true_positives_count = len(true_positives)
@@ -55,7 +55,7 @@ def get_statistic_and_points(possible_points_grouped, bumps, realize_time, row_c
 
     return {
         "sens": round(sensitivity, 2),
-        "prec":  round(precision, 2),
+        "prec": round(precision, 2),
         "tp": true_positives_count,
         "fp": false_positives_count,
         "fn": false_negatives_count,
@@ -72,7 +72,9 @@ def run_algorithms(data, bumps, timeout):
         grouped_possible_artefacts = helpers.group_duplicates(alg_result[0], 20, timeout)
         if grouped_possible_artefacts is not None:
             error = False
-            statistic, tp, fp, fn = get_statistic_and_points(grouped_possible_artefacts, bumps, alg_result[1], row_count)
+            statistic, tp, fp, fn = get_statistic_and_points(
+                grouped_possible_artefacts, bumps, alg_result[1], row_count
+            )
             prepared_tp = prepare_results(tp)
             prepared_fp = prepare_results(fp)
             prepared_fn = prepare_results(fn)
@@ -94,3 +96,4 @@ def run_algorithms(data, bumps, timeout):
         }
         results.append(algorithm_data)
     return results
+

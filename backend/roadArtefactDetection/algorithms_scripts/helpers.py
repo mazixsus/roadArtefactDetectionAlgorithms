@@ -86,7 +86,8 @@ def true_positives_v1(possible_tuplepoints, bumps_tuplepoints, distance):
 
     return results
 
-def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
+
+def classify(possible_tuplepoints, bumps_tuplepoints, distance):
     """
     Returns true positives: points, which are in the near distance
     to the points marked by the user as the real artefacts
