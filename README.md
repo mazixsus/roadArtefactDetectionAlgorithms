@@ -1,5 +1,11 @@
 # Frontend application 
 
+### Requirement to run frontend application:
+- Node.js
+- node modules (command "npm install")
+
+### How to run:
+To run application open in folder radac-frontend command console and type "npm start".
 
 # Backend application 
 
