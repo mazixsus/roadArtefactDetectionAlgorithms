@@ -64,7 +64,6 @@ export default function SurveyInput(props) {
     const handleButtonClick = () => {
         if (validation()) {
             const data = new FormData();
-
             data.append('survey', surveyFile);
             data.append('bumps', bumpsFile);
 
