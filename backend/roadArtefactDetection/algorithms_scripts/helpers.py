@@ -1,6 +1,7 @@
 """
 CRADIA helper functions
 """
+import time
 from math import radians, cos, sin, asin, sqrt
 from functools import reduce
 import numpy
@@ -67,7 +68,7 @@ def bump_tuplepoint(bumps, index):
     return bump[0], bump[1]
 
 
-def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
+def true_positives_v1(possible_tuplepoints, bumps_tuplepoints, distance):
     """
     Returns true positives: points, which are in the near distance
     to the points marked by the user as the real artefacts
@@ -86,6 +87,56 @@ def true_positives(possible_tuplepoints, bumps_tuplepoints, distance):
     return results
 
 
+def classify(possible_tuplepoints, bumps_tuplepoints, distance):
+    """
+    Returns true positives: points, which are in the near distance
+    to the points marked by the user as the real artefacts
+    """
+
+    tp = []
+    fp = []
+    fn = []
+    if len(bumps_tuplepoints) == 0:
+        return tp, fp, fn
+
+    if len(possible_tuplepoints) == 0:
+        fn = bumps_tuplepoints
+        return tp, fp, fn
+
+    is_detected = False
+    for i in range(len(bumps_tuplepoints)):
+        for j in range(len(possible_tuplepoints)):
+            if haversine_point(bumps_tuplepoints[i], possible_tuplepoints[j]) < distance:
+                tp.append(possible_tuplepoints[j])
+                is_detected = True
+                break
+        if not is_detected:
+            fn.append(bumps_tuplepoints[i])
+        is_detected = False
+
+    # print("----------------------possible_tuplepoints-----------------------")
+    # print(possible_tuplepoints)
+    # print("--------------------------tp---------------------------------")
+    # print(tp)
+
+    is_tp = False
+    for possible_survey in possible_tuplepoints:
+        for tp_survey in tp:
+            if possible_survey[0] == tp_survey[0] and possible_survey[1] == tp_survey[1]:
+                is_tp = True
+                break
+        if not is_tp:
+            fp.append(possible_survey)
+        is_tp = False
+
+    # print("---------------------------fp-------------------------------")
+    # print(fp)
+    # print("--------------------------fn-------------------------------")
+    # print(fn)
+
+    return tp, fp, fn
+
+
 def bumps_to_tuplepoints(bumps):
     bumps_tuplepoints = []
     for i in range(len(bumps)):
@@ -102,22 +153,25 @@ def indices_to_tuplepoints(indices, data):
     return points
 
 
-def group_duplicates(tuplepoints, distance):
+def group_duplicates(tuplepoints, distance, timeout):
     """
     Groups duplicates - points which are in the radious of a defined distance
     a grouped into one    
     """
     result = []
+    start_time = time.perf_counter()
 
     for i in range(len(tuplepoints)):
         found = False
         for j in range(len(result)):
-            # print(ccdfp.haversine_point(tuplepoints[i], result[j]))
-            if haversine_point(tuplepoints[i], tuplepoints[j]) < distance:
+            if haversine_point(tuplepoints[i], result[j]) < distance:
                 found = True
 
         if not found:
             result.append(tuplepoints[i])
+
+        if time.perf_counter() - start_time > timeout:
+            return None
 
     return result
 

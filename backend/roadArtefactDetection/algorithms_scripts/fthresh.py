@@ -5,7 +5,7 @@ import pandas
 import numpy
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
-from roadArtefactDetection.helper_scripts import rrui
+from roadArtefactDetection.algorithms_scripts import rrui
 
 
 def quality_mf(variant):
