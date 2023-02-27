@@ -1,5 +1,7 @@
 # roadArtefactDetectionAlgorithms
 
+Road pothole detection system - web api supporting the operation of classification algorithms together with the assessment of classification processes using the confusion matrix and related metrics.
+
 ### Z-THRESH
 - TP: 5 Acc: (83.33%) FP: 10 FN: 1 Threshold: 1.2
 - TP: 7 Acc: (77.78%) FP: 8 FN: 2 Threshold: 1.2
